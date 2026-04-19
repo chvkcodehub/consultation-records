@@ -17,9 +17,9 @@ public interface ConsultationUseCase {
 
     List<Consultation> findConsultationByPatient(String patientCode);
 
-    Consultation createConsultation(@NonNull Consultation consultation);
+    Consultation createConsultation(@NonNull CreateConsultationCommand command);
 
-    Consultation updateConsultation(@NonNull String id, @NonNull Consultation consultation);
+    Consultation updateConsultation(@NonNull String id, @NonNull UpdateConsultationCommand command);
 
     void deleteConsultation(@NonNull String id);
 }

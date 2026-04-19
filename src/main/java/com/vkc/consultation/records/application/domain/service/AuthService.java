@@ -11,20 +11,20 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.vkc.consultation.records.application.domain.model.User;
 import com.vkc.consultation.records.application.port.in.AuthUseCase;
+import com.vkc.consultation.records.application.port.out.TokenPort;
 import com.vkc.consultation.records.application.port.out.UserPort;
-import com.vkc.consultation.records.security.JwtUtil;
 
 @Service
 public class AuthService implements AuthUseCase {
 
     private final UserPort userPort;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
+    private final TokenPort tokenPort;
 
-    public AuthService(UserPort userPort, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
+    public AuthService(UserPort userPort, PasswordEncoder passwordEncoder, TokenPort tokenPort) {
         this.userPort = userPort;
         this.passwordEncoder = passwordEncoder;
-        this.jwtUtil = jwtUtil;
+        this.tokenPort = tokenPort;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class AuthService implements AuthUseCase {
         user.setRoles(Set.of("ROLE_USER"));
         user.setCreatedAt(Instant.now());
         userPort.save(user);
-        return jwtUtil.generateToken(email);
+        return tokenPort.generateToken(email);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class AuthService implements AuthUseCase {
         if (!passwordEncoder.matches(password, user.getPasswordHash())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
         }
-        return jwtUtil.generateToken(email);
+        return tokenPort.generateToken(email);
     }
 
     @Override

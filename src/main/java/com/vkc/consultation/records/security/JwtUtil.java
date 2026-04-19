@@ -9,12 +9,14 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.vkc.consultation.records.application.port.out.TokenPort;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
 @Component
-public class JwtUtil {
+public class JwtUtil implements TokenPort {
 
     private final SecretKey secretKey;
     private final long expirationMs;

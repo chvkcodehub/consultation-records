@@ -8,17 +8,18 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.Data;
 
 @Data
-@Document(collection = "Patient")
-public class PatientDocument {
+@Document(collection = "Consultee")
+public class ConsulteeDocument {
     @Id
     private String id;
     private String code;
     private String name;
     private String gender;
     private Date dob;
-    private String condition;
     private String address;
-    private String phone;
     private String email;
+    private String phone;
     private Date startDate;
+    private String condition;
+    private String recoveryStatus;
 }

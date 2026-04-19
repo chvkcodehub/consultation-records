@@ -5,15 +5,17 @@ import java.util.Date;
 import lombok.Data;
 
 @Data
-public class Patient {
+public class Consultee {
     private String id;
     private String code;
     private String name;
     private String gender;
     private Date dob;
-    private String condition;
     private String address;
-    private String phone;
     private String email;
+    private String phone;
     private Date startDate;
+    private String condition;
+    private String recoveryStatus;
+    
 }

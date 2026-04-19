@@ -8,63 +8,63 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.vkc.consultation.records.adapter.out.persistence.ConsultationAdapter;
 import com.vkc.consultation.records.application.domain.model.Consultation;
 import com.vkc.consultation.records.application.port.in.ConsultationUseCase;
+import com.vkc.consultation.records.application.port.out.ConsultationPort;
 @Service
 public class ConsultationService implements ConsultationUseCase {
-private final ConsultationAdapter consultationAdapter;
+private final ConsultationPort consultationPort;
 
-    public ConsultationService(ConsultationAdapter consultationAdapter) {
-        this.consultationAdapter = consultationAdapter;
+    public ConsultationService(ConsultationPort consultationPort) {
+        this.consultationPort = consultationPort;
     }
 
      @Override
     public List<Consultation> findConsultations() {
-        return consultationAdapter.findConsultations();
+        return consultationPort.findConsultations();
     }
 
     @Override
     public Consultation findConsultationById(@NonNull String id) {
-        return consultationAdapter.findConsultationById(id);
+        return consultationPort.findConsultationById(id);
     }
 
     @Override
     public Consultation findConsultationByCode(String code) {
-        return consultationAdapter.findConsultationByCode(code);
+        return consultationPort.findConsultationByCode(code);
     }
 
     @Override
     public List<Consultation> findConsultationByConsultant(String consultantCode) {
-        return consultationAdapter.findConsultationsByConsultant(consultantCode);
+        return consultationPort.findConsultationsByConsultant(consultantCode);
     }
 
     @Override
     public List<Consultation> findConsultationByPatient(String patientCode) {
-        return consultationAdapter.findConsultationsByPatient(patientCode);
+        return consultationPort.findConsultationsByPatient(patientCode);
     }
 
     @Override
     public Consultation createConsultation(@NonNull Consultation consultation) {
         setConsultationId(consultation, null);
-        return consultationAdapter.saveConsultation(consultation);
+        return consultationPort.saveConsultation(consultation);
     }
 
     @Override
     public Consultation updateConsultation(@NonNull String id, @NonNull Consultation consultation) {
-        if (!consultationAdapter.existsById(id)) {
+        if (!consultationPort.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Consultation not found with id: " + id);
         }
         setConsultationId(consultation, id);
-        return consultationAdapter.saveConsultation(consultation);
+        return consultationPort.saveConsultation(consultation);
     }
 
     @Override
     public void deleteConsultation(@NonNull String id) {
-        if (!consultationAdapter.existsById(id)) {
+        if (!consultationPort.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Consultation not found with id: " + id);
         }
-        consultationAdapter.deleteById(id);
+        consultationPort.deleteById(id);
     }
 
     private void setConsultationId(@NonNull Consultation consultation, String id) {

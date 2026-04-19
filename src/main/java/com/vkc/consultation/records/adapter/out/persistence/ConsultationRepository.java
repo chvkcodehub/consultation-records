@@ -1,17 +1,17 @@
 package com.vkc.consultation.records.adapter.out.persistence;
 
-import com.vkc.consultation.records.application.domain.model.Consultation;
+import java.util.List;
+
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
-import java.util.List;
+import com.vkc.consultation.records.adapter.out.persistence.entity.ConsultationDocument;
 
-public interface ConsultationRepository extends MongoRepository<Consultation, String> {
+public interface ConsultationRepository extends MongoRepository<ConsultationDocument, String> {
     @Query("{code : ?0}")
-    Consultation findConsultationByCode(String code);
+    ConsultationDocument findConsultationByCode(String code);
     @Query("{consultantCode : ?0}")
-    List <Consultation> findConsultationsByConsultant(String consultantCode);
+    List<ConsultationDocument> findConsultationsByConsultant(String consultantCode);
     @Query("{patientCode : ?0}")
-    List <Consultation> findConsultationsByPatient(String patientCode);
-
+    List<ConsultationDocument> findConsultationsByPatient(String patientCode);
 }

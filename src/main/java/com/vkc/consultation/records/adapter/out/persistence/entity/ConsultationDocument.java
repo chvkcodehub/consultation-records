@@ -1,12 +1,17 @@
-package com.vkc.consultation.records.application.domain.model;
+package com.vkc.consultation.records.adapter.out.persistence.entity;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import lombok.Data;
 
 @Data
-public class Consultation {
+@Document(collection = "Consultation")
+public class ConsultationDocument {
+    @Id
     private String id;
     private String code;
     private String type;

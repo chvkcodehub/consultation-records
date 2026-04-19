@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
+import com.vkc.consultation.records.adapter.out.persistence.mapper.UserMapper;
 import com.vkc.consultation.records.application.domain.model.User;
 import com.vkc.consultation.records.application.port.out.UserPort;
 
@@ -18,12 +19,12 @@ public class UserAdapter implements UserPort {
 
     @Override
     public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return userRepository.findByEmail(email).map(UserMapper::toDomain);
     }
 
     @Override
     public User save(User user) {
-        return userRepository.save(user);
+        return UserMapper.toDomain(userRepository.save(UserMapper.toDocument(user)));
     }
 
     @Override

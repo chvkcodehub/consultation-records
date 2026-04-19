@@ -1,9 +1,14 @@
-package com.vkc.consultation.records.application.domain.model;
+package com.vkc.consultation.records.adapter.out.persistence.entity;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.Data;
 
 @Data
-public class Goals {
+@Document(collection = "Goals")
+public class GoalsDocument {
+    @Id
     private String id;
     private String code;
     private String name;

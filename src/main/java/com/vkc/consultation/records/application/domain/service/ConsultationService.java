@@ -1,5 +1,6 @@
 package com.vkc.consultation.records.application.domain.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -61,6 +62,7 @@ public class ConsultationService implements ConsultationUseCase {
         consultation.setFollowUpDate(command.followUpDate());
         consultation.setCreatedBy(command.createdBy());
         consultation.setFee(command.fee());
+        consultation.setUpdatedDate(new Date());
         return consultationPort.saveConsultation(consultation);
     }
 

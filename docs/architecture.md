@@ -31,6 +31,7 @@
 - User registration and authentication (JWT-based)
 - Password reset via a token-based flow
 - Full CRUD management of `Consultation` records linking consultants to patients
+- Full CRUD management of `Consultant` records representing medical professionals
 
 The application is built following **Hexagonal Architecture** (also known as Ports & Adapters), ensuring that the core business logic is completely independent of frameworks, databases, and transport protocols.
 
@@ -78,11 +79,14 @@ Traditional layered architectures (Controller → Service → Repository) tend t
 │  Controller   │  │  Consultation-   │  │  JwtUtil         │
 │               │  │  Adapter         │  │  (implements     │
 │  Consultation-│  │                  │  │   TokenPort)     │
+│  Controller   │  │  Consultant-     │  │                  │
+│               │  │  Adapter         │  │  JwtAuthentic-   │
+│  Consultant-  │  │                  │  │  ationFilter     │
 │  Controller   │  │  UserAdapter     │  │                  │
-│               │  │                  │  │  JwtAuthentic-   │
-│  (Web DTOs)   │  │  (Persistence    │  │  ationFilter     │
+│               │  │                  │  │  SecurityConfig  │
+│  (Web DTOs)   │  │  (Persistence    │  │                  │
 │               │  │   Entities +     │  │                  │
-│               │  │   Mappers)       │  │  SecurityConfig  │
+│               │  │   Mappers)       │  │                  │
 └───────┬───────┘  └────────┬─────────┘  └────────┬────────┘
         │                   │                      │
         │    PORT/IN         │   PORT/OUT           │  PORT/OUT
@@ -93,16 +97,17 @@ Traditional layered architectures (Controller → Service → Repository) tend t
 │  ┌─────────────────────────────────────────────────────────────────┐    │
 │  │                      PORTS (interfaces)                          │    │
 │  │                                                                  │    │
-│  │  IN:  AuthUseCase   ConsultationUseCase                          │    │
-│  │       CreateConsultationCommand   UpdateConsultationCommand      │    │
-│  │                                                                  │    │
-│  │  OUT: UserPort   ConsultationPort   TokenPort                    │    │
+│  IN:  AuthUseCase   ConsultationUseCase   ConsultantUseCase      │    │
+│       CreateConsultationCommand   UpdateConsultationCommand      │    │
+│       CreateConsultantCommand     UpdateConsultantCommand        │    │
+│                                                                  │    │
+│  OUT: UserPort   ConsultationPort   ConsultantPort   TokenPort   │    │
 │  └─────────────────────────────────────────────────────────────────┘    │
 │                                                                          │
 │  ┌─────────────────────────────────────────────────────────────────┐    │
 │  │                  DOMAIN SERVICES                                 │    │
 │  │                                                                  │    │
-│  │         AuthService          ConsultationService                 │    │
+│  │   AuthService   ConsultationService   ConsultantService          │    │
 │  └─────────────────────────────────────────────────────────────────┘    │
 │                                                                          │
 │  ┌─────────────────────────────────────────────────────────────────┐    │
@@ -129,6 +134,7 @@ com.vkc.consultation.records
 │   │   └── web/
 │   │       ├── AuthController.java              # Inbound: HTTP auth endpoints
 │   │       ├── ConsultationController.java      # Inbound: HTTP consultation endpoints
+│   │       ├── ConsultantController.java        # Inbound: HTTP consultant endpoints
 │   │       └── dto/
 │   │           ├── AuthResponse.java
 │   │           ├── LoginRequest.java
@@ -137,21 +143,27 @@ com.vkc.consultation.records
 │   │           ├── ResetPasswordRequest.java
 │   │           ├── ConsultationResponse.java
 │   │           ├── CreateConsultationRequest.java
-│   │           └── UpdateConsultationRequest.java
+│   │           ├── UpdateConsultationRequest.java
+│   │           ├── ConsultantResponse.java
+│   │           ├── CreateConsultantRequest.java
+│   │           └── UpdateConsultantRequest.java
 │   └── out/
 │       └── persistence/
 │           ├── ConsultationAdapter.java         # Outbound: implements ConsultationPort
 │           ├── ConsultationRepository.java      # Spring Data MongoDB repository
+│           ├── ConsultantAdapter.java           # Outbound: implements ConsultantPort
+│           ├── ConsultantRepository.java        # Spring Data MongoDB repository
 │           ├── UserAdapter.java                 # Outbound: implements UserPort
 │           ├── UserRepository.java              # Spring Data MongoDB repository
 │           ├── entity/
 │           │   ├── ConsultationDocument.java    # @Document persistence entity
-│           │   ├── UserDocument.java
 │           │   ├── ConsultantDocument.java
+│           │   ├── UserDocument.java
 │           │   ├── PatientDocument.java
 │           │   └── GoalsDocument.java
 │           └── mapper/
 │               ├── ConsultationMapper.java      # Domain ↔ Document translation
+│               ├── ConsultantMapper.java
 │               └── UserMapper.java
 │
 ├── application/
@@ -164,16 +176,21 @@ com.vkc.consultation.records
 │   │   │   └── User.java
 │   │   └── service/
 │   │       ├── AuthService.java                 # Business logic: authentication
-│   │       └── ConsultationService.java         # Business logic: consultations
+│   │       ├── ConsultationService.java         # Business logic: consultations
+│   │       └── ConsultantService.java           # Business logic: consultants
 │   └── port/
 │       ├── in/
 │       │   ├── AuthUseCase.java                 # Inbound port: auth contract
 │       │   ├── ConsultationUseCase.java         # Inbound port: consultation contract
+│       │   ├── ConsultantUseCase.java           # Inbound port: consultant contract
 │       │   ├── CreateConsultationCommand.java   # Command value object
-│       │   └── UpdateConsultationCommand.java   # Command value object
+│       │   ├── UpdateConsultationCommand.java   # Command value object
+│       │   ├── CreateConsultantCommand.java     # Command value object
+│       │   └── UpdateConsultantCommand.java     # Command value object
 │       └── out/
 │           ├── UserPort.java                    # Outbound port: user persistence
 │           ├── ConsultationPort.java            # Outbound port: consultation persistence
+│           ├── ConsultantPort.java              # Outbound port: consultant persistence
 │           └── TokenPort.java                   # Outbound port: token generation
 │
 └── security/
@@ -206,7 +223,7 @@ Domain models are the heart of the application. They represent the core business
 | Class | Responsibility |
 |---|---|
 | `Consultation` | Represents a single medical consultation event. Fields: `id`, `code`, `type`, `consultantCode`, `patientCode`, `diagnosis`, `prescription`, `comments`, `consultationDate`, `followUpDate`, `updatedDate`, `createdBy`, `fee` |
-| `Consultant` | Represents a medical professional. Fields: `id`, `code`, `name`, `speciality`, `fee` |
+| `Consultant` | Represents a medical professional. Fields: `id`, `code`, `name`, `speciality`, `qualification`, `experienceYears`, `fee` |
 | `Patient` | Represents a patient receiving care. Fields: `id`, `code`, `name`, `gender`, `dob`, `condition`, `address`, `phone`, `email`, `startDate` |
 | `Goals` | Represents a health goal for a patient. Fields: `id`, `code`, `name`, `description`, `importance`, `difficulty`, `achievingAgeYears`, `achievingAgeMonths`, `remarks`, `periodInMonths`, `createdDate`, `updatedDate`, `status` |
 | `User` | Represents a system user (healthcare administrator). Fields: `id`, `email`, `passwordHash`, `roles`, `createdAt`, `resetToken`, `resetTokenExpiry` |
@@ -245,6 +262,21 @@ A Java `record` (immutable value object) carrying all data needed to create a co
 #### `UpdateConsultationCommand`
 Same rationale as `CreateConsultationCommand`, scoped to update operations. Includes `updatedDate` since updates may carry an explicit timestamp.
 
+#### `ConsultantUseCase`
+Defines the consultant management contract:
+- `findConsultants()` — list all
+- `findConsultantById(id)` — find by MongoDB id
+- `findConsultantByCode(code)` — find by business code
+- `createConsultant(CreateConsultantCommand)` — create new record
+- `updateConsultant(id, UpdateConsultantCommand)` — update existing record
+- `deleteConsultant(id)` — delete by id
+
+#### `CreateConsultantCommand`
+An immutable Java `record` carrying the data needed to create a consultant: `code`, `name`, `speciality`, `qualification`, `experienceYears`, `fee`. No `id` field — the application core assigns the identity.
+
+#### `UpdateConsultantCommand`
+Same fields as `CreateConsultantCommand`, scoped to update operations.
+
 **Why this matters:** Inbound ports form a stable API surface. The HTTP controller, a future gRPC adapter, or a CLI tool all call the same interface. Business logic changes (e.g., adding validation to `createConsultation`) happen in one place — the service implementation — and all callers benefit automatically. Command objects make the contract explicit and protect domain invariants.
 
 ---
@@ -273,6 +305,17 @@ boolean existsById(String id);
 void deleteById(String id);
 ```
 The full persistence contract for consultations, expressed in domain terms.
+
+#### `ConsultantPort`
+```java
+List<Consultant> findAll();
+Optional<Consultant> findById(String id);
+Optional<Consultant> findByCode(String code);
+Consultant save(Consultant consultant);
+boolean existsById(String id);
+void deleteById(String id);
+```
+The full persistence contract for consultants, expressed in domain terms.
 
 #### `TokenPort`
 ```java
@@ -312,10 +355,21 @@ They have zero imports from `adapter.*`, `security.*`, or any Spring Web / Mongo
 
 | Method | Business logic |
 |---|---|
-| `createConsultation` | Maps `CreateConsultationCommand` → `Consultation` domain object, delegates to `ConsultationPort.saveConsultation` |
+| `createConsultation` | Maps `CreateConsultationCommand` → `Consultation` domain object, sets `updatedDate` server-side, delegates to `ConsultationPort.saveConsultation` |
 | `updateConsultation` | Verifies record exists via `existsById`, maps `UpdateConsultationCommand` → `Consultation` with the target `id` set, delegates to `saveConsultation` |
 | `deleteConsultation` | Verifies record exists, delegates to `deleteById` |
 | Query methods | Pass-through to `ConsultationPort` |
+
+#### `ConsultantService`
+**Implements:** `ConsultantUseCase`  
+**Depends on:** `ConsultantPort`
+
+| Method | Business logic |
+|---|---|
+| `createConsultant` | Maps `CreateConsultantCommand` → `Consultant` domain object, delegates to `ConsultantPort.save` |
+| `updateConsultant` | Verifies record exists via `existsById`, maps `UpdateConsultantCommand` → `Consultant` with the target `id` set, delegates to `save` |
+| `deleteConsultant` | Verifies record exists, delegates to `deleteById` |
+| Query methods | Pass-through to `ConsultantPort` |
 
 **Why this matters:** Domain services are the most important classes for unit testing. Because they have no framework dependencies, testing `ConsultationService.updateConsultation` is as simple as providing a mock `ConsultationPort` — no Spring context, no MongoDB container, no network required. Tests run in milliseconds and test only the business rules.
 
@@ -354,6 +408,21 @@ All `/auth/**` endpoints are publicly accessible (no JWT required, configured in
 
 All `/consultations/**` endpoints require a valid JWT Bearer token.
 
+#### `ConsultantController`
+**Base path:** `/consultants`  
+**Depends on:** `ConsultantUseCase`, command objects from `port/in`
+
+| Endpoint | Method | Description |
+|---|---|---|
+| `/consultants` | `GET` | Returns all consultants as `List<ConsultantResponse>` |
+| `/consultants/id/{id}` | `GET` | Returns single `ConsultantResponse` by MongoDB id |
+| `/consultants/code/{code}` | `GET` | Returns single `ConsultantResponse` by business code |
+| `/consultants` | `POST` | Accepts `CreateConsultantRequest`, builds `CreateConsultantCommand`, returns `ConsultantResponse` with `201 Created` |
+| `/consultants/id/{id}` | `PUT` | Accepts `UpdateConsultantRequest`, builds `UpdateConsultantCommand`, returns `ConsultantResponse` |
+| `/consultants/id/{id}` | `DELETE` | Deletes by id, returns `204 No Content` |
+
+All `/consultants/**` endpoints require a valid JWT Bearer token.
+
 **Why this matters:** Controllers are intentionally thin. They contain no business logic — only HTTP-to-domain translation. This means the HTTP layer can be replaced (e.g., with a gRPC adapter or a message consumer) without touching any business rules. Because controllers depend on the `*UseCase` interface and not on the concrete service class, the controller tests can mock the interface without booting a Spring context.
 
 ---
@@ -372,6 +441,9 @@ DTOs (Data Transfer Objects) are `record` types that represent the shape of JSON
 | `CreateConsultationRequest` | Inbound | All fields needed to create a consultation (no `id`) |
 | `UpdateConsultationRequest` | Inbound | All fields needed to update a consultation (no `id`) |
 | `ConsultationResponse` | Outbound | Full consultation data including `id`; has a static `from(Consultation)` factory |
+| `CreateConsultantRequest` | Inbound | `{ code, name, speciality, qualification, experienceYears, fee }` (no `id`) |
+| `UpdateConsultantRequest` | Inbound | Same fields as `CreateConsultantRequest` |
+| `ConsultantResponse` | Outbound | Full consultant data including `id`; has a static `from(Consultant)` factory |
 
 **Why this matters:** Without dedicated DTOs, the domain model is serialised directly over HTTP. This means:
 - Persistence metadata (`@Id`) is exposed in the API response
@@ -398,8 +470,17 @@ Every method translates: domain objects to `ConsultationDocument` (via mapper) b
 
 Same translation pattern: `User` ↔ `UserDocument` via `UserMapper`.
 
+#### `ConsultantAdapter`
+**Implements:** `ConsultantPort`  
+**Depends on:** `ConsultantRepository`, `ConsultantMapper`
+
+Same translation pattern: `Consultant` ↔ `ConsultantDocument` via `ConsultantMapper`.
+
 #### `ConsultationRepository`
 Extends `MongoRepository<ConsultationDocument, String>`. Provides Spring Data auto-generated queries plus three custom `@Query` methods for filtering by `code`, `consultantCode`, and `patientCode`. Uses `ConsultationDocument` — never the domain `Consultation` class.
+
+#### `ConsultantRepository`
+Extends `MongoRepository<ConsultantDocument, String>`. Provides one custom `@Query` method: `findByCode(String code)`. Uses `ConsultantDocument`.
 
 #### `UserRepository`
 Extends `MongoRepository<UserDocument, String>`. Provides `findByEmail` and `existsByEmail`. Uses `UserDocument`.
@@ -431,6 +512,10 @@ Mappers are stateless utility classes (private constructors, all-static methods)
 #### `ConsultationMapper`
 - `toDomain(ConsultationDocument) → Consultation`
 - `toDocument(Consultation) → ConsultationDocument`
+
+#### `ConsultantMapper`
+- `toDomain(ConsultantDocument) → Consultant`
+- `toDocument(Consultant) → ConsultantDocument`
 
 #### `UserMapper`
 - `toDomain(UserDocument) → User`
@@ -535,13 +620,13 @@ noClasses().that().resideInAPackage("..application..")
 
 ### Adding a new delivery channel (e.g., gRPC)
 1. Create a new package `adapter/in/grpc`
-2. Implement a gRPC service class that calls `ConsultationUseCase` or `AuthUseCase`
+2. Implement a gRPC service class that calls `ConsultationUseCase`, `ConsultantUseCase`, or `AuthUseCase`
 3. No existing code changes
 
 ### Switching from MongoDB to PostgreSQL
 1. Create new `@Entity`-annotated JPA entities in `adapter/out/persistence/entity/`
 2. Create new Spring Data JPA repositories
-3. Create new adapter classes implementing `ConsultationPort` and `UserPort`
+3. Create new adapter classes implementing `ConsultationPort`, `ConsultantPort`, and `UserPort`
 4. Update Spring wiring (swap `@Component` or use `@Primary`)
 5. Domain models, services, and all ports remain completely unchanged
 

@@ -22,4 +22,8 @@ public interface ConsultationUseCase {
     Consultation updateConsultation(@NonNull String id, @NonNull UpdateConsultationCommand command);
 
     void deleteConsultation(@NonNull String id);
+
+    Consultation bookConsultation(@NonNull BookConsultationCommand command);
+
+    Consultation findConsultationForPatient(@NonNull String id, @NonNull String patientCode);
 }

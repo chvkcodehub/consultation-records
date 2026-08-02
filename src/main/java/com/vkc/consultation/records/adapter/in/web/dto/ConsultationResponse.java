@@ -4,11 +4,14 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import com.vkc.consultation.records.application.domain.model.Consultation;
+import com.vkc.consultation.records.application.domain.model.ConsultationStatus;
+import com.vkc.consultation.records.application.domain.model.ConsultationType;
 
 public record ConsultationResponse(
         String id,
         String code,
-        String type,
+        ConsultationType type,
+        ConsultationStatus status,
         String consultantCode,
         String patientCode,
         String diagnosis,
@@ -25,6 +28,7 @@ public record ConsultationResponse(
                 c.getId(),
                 c.getCode(),
                 c.getType(),
+                c.getStatus(),
                 c.getConsultantCode(),
                 c.getPatientCode(),
                 c.getDiagnosis(),

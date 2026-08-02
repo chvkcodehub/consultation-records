@@ -73,7 +73,7 @@ public class ConsultationController {
     @ResponseBody
     public ConsultationResponse createConsultation(@RequestBody CreateConsultationRequest request) {
         CreateConsultationCommand command = new CreateConsultationCommand(
-                request.code(), request.type(), request.consultantCode(), request.patientCode(),
+                request.code(), request.type(), request.status(), request.consultantCode(), request.patientCode(),
                 request.diagnosis(), request.prescription(), request.comments(),
                 request.consultationDate(), request.followUpDate(), request.createdBy(), request.fee());
         return ConsultationResponse.from(consultationUseCase.createConsultation(command));
@@ -84,7 +84,7 @@ public class ConsultationController {
     public ConsultationResponse updateConsultation(@PathVariable String id,
             @RequestBody UpdateConsultationRequest request) {
         UpdateConsultationCommand command = new UpdateConsultationCommand(
-                request.code(), request.type(), request.consultantCode(), request.patientCode(),
+                request.code(), request.type(), request.status(), request.consultantCode(), request.patientCode(),
                 request.diagnosis(), request.prescription(), request.comments(),
                 request.consultationDate(), request.followUpDate(), request.updatedDate(),
                 request.createdBy(), request.fee());

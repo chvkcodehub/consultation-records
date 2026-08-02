@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.vkc.consultation.records.adapter.in.web.dto.AuthResponse;
 import com.vkc.consultation.records.adapter.in.web.dto.ForgotPasswordRequest;
 import com.vkc.consultation.records.adapter.in.web.dto.LoginRequest;
+import com.vkc.consultation.records.adapter.in.web.dto.RegisterConsulteeRequest;
 import com.vkc.consultation.records.adapter.in.web.dto.RegisterRequest;
 import com.vkc.consultation.records.adapter.in.web.dto.ResetPasswordRequest;
 import com.vkc.consultation.records.application.port.in.AuthUseCase;
+import com.vkc.consultation.records.application.port.in.RegisterConsulteeCommand;
 
 @RestController
 @RequestMapping("/auth")
@@ -31,15 +33,23 @@ public class AuthController {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public AuthResponse register(@RequestBody RegisterRequest request) {
-        String token = authUseCase.register(request.email(), request.password());
-        return new AuthResponse(token);
+        return AuthResponse.from(authUseCase.register(request.email(), request.password()));
     }
 
     @PostMapping("/login")
     @ResponseBody
     public AuthResponse login(@RequestBody LoginRequest request) {
-        String token = authUseCase.login(request.email(), request.password());
-        return new AuthResponse(token);
+        return AuthResponse.from(authUseCase.login(request.email(), request.password()));
+    }
+
+    @PostMapping("/register-consultee")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public AuthResponse registerConsultee(@RequestBody RegisterConsulteeRequest request) {
+        RegisterConsulteeCommand command = new RegisterConsulteeCommand(
+                request.email(), request.password(), request.name(), request.gender(),
+                request.dob(), request.address(), request.phone());
+        return AuthResponse.from(authUseCase.registerConsultee(command));
     }
 
     @PostMapping("/forgot-password")

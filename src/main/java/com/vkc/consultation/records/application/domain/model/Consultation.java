@@ -9,7 +9,8 @@ import lombok.Data;
 public class Consultation {
     private String id;
     private String code;
-    private String type;
+    private ConsultationType type;
+    private ConsultationStatus status;
     private String consultantCode;
     private String patientCode;
     private String diagnosis;

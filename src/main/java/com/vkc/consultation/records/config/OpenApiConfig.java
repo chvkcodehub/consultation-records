@@ -19,7 +19,7 @@ public class OpenApiConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title("Consultation Records API")
-                        .description("REST API for managing medical consultation records, consultants, consultees (patients), and authentication.")
+                        .description("REST API for managing medical consultation records, consultants, consultees (patients), health goals, and authentication.")
                         .version("1.0.0"))
                 .addSecurityItem(new SecurityRequirement().addList(BEARER_SCHEME))
                 .components(new Components()

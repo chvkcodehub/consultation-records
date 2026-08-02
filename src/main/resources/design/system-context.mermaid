@@ -2,22 +2,22 @@ C4Context
     title System Context Diagram — Consultation Records
 
     %% Row 1: primary left-to-right flow — no arrows cross within this row
-    Person(healthcareAdmin, "Healthcare Administrator", "Manages consultations, registers and logs into the system")
-    System_Ext(frontendApp, "Frontend Web Application", "Vite-based SPA running at localhost:5173. Provides the UI for managing consultation records.")
-    System(consultationRecords, "Consultation Records API", "Spring Boot REST API. Manages authentication and consultation records using Hexagonal Architecture.")
-    System_Ext(mongoAtlas, "MongoDB Atlas", "Cloud-hosted MongoDB database (cluster: atlascluster). Stores users, consultations, consultants, patients, and goals.")
+    Person(healthcareAdmin, "Healthcare Administrator", "Manages consultants, consultees, consultations, goals, and views consolidated reports")
+    Person(consulteeUser, "Consultee", "Patient/client who registers, browses consultants, books their own consultations, and reviews their history")
+    System(frontendApp, "Frontend Web Application", "React + Vite + TypeScript SPA running at localhost:5173. Role-guarded admin dashboard and consultee self-service portal.")
+    System(consultationRecords, "Consultation Records API", "Spring Boot REST API. Manages dual-role (admin/consultee) authentication, consultation booking, and reporting using Hexagonal Architecture.")
+    System_Ext(mongoAtlas, "MongoDB Atlas", "Cloud-hosted MongoDB database (cluster: atlascluster). Stores users, consultations, consultants, consultees, and goals.")
 
     %% Row 2: referenced entities + planned system — positioned below their related node
-    Person(consultant, "Consultant", "Medical professional whose records are tracked")
-    Person(patient, "Patient", "Individual receiving consultations")
+    Person(consultant, "Consultant", "Medical professional whose records are tracked and who is booked for consultations")
     System_Ext(emailService, "Email Service", "Planned external email provider for delivering password-reset tokens to users. Not yet implemented.")
 
-    Rel(healthcareAdmin, frontendApp, "Uses", "HTTPS / Browser")
-    Rel(frontendApp, consultationRecords, "Calls REST API", "JSON/HTTPS, JWT Bearer Token")
+    Rel(healthcareAdmin, frontendApp, "Uses (admin dashboard)", "HTTPS / Browser")
+    Rel(consulteeUser, frontendApp, "Uses (self-service portal)", "HTTPS / Browser")
+    Rel(frontendApp, consultationRecords, "Calls REST API", "JSON/HTTPS, JWT Bearer Token (role: ADMIN or CONSULTEE)")
     Rel(consultationRecords, mongoAtlas, "Reads/Writes data", "MongoDB Wire Protocol (TLS)")
     Rel(consultationRecords, emailService, "Sends password reset email [planned]", "SMTP")
 
     Rel_Back(consultant, consultationRecords, "Consultation records reference")
-    Rel_Back(patient, consultationRecords, "Patient records reference")
 
     UpdateLayoutConfig($c4ShapeInRow="4", $c4BoundaryInRow="1")

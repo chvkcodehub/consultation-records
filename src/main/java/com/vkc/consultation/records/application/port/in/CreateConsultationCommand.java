@@ -3,9 +3,13 @@ package com.vkc.consultation.records.application.port.in;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.vkc.consultation.records.application.domain.model.ConsultationStatus;
+import com.vkc.consultation.records.application.domain.model.ConsultationType;
+
 public record CreateConsultationCommand(
         String code,
-        String type,
+        ConsultationType type,
+        ConsultationStatus status,
         String consultantCode,
         String patientCode,
         String diagnosis,

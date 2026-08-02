@@ -10,4 +10,7 @@ import com.vkc.consultation.records.adapter.out.persistence.entity.ConsulteeDocu
 public interface ConsulteeRepository extends MongoRepository<ConsulteeDocument, String> {
     @Query("{code : ?0}")
     Optional<ConsulteeDocument> findByCode(String code);
+
+    @Query("{email : ?0}")
+    Optional<ConsulteeDocument> findByEmail(String email);
 }

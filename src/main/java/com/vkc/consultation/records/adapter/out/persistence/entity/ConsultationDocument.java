@@ -6,6 +6,9 @@ import java.util.Date;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.vkc.consultation.records.application.domain.model.ConsultationStatus;
+import com.vkc.consultation.records.application.domain.model.ConsultationType;
+
 import lombok.Data;
 
 @Data
@@ -14,7 +17,8 @@ public class ConsultationDocument {
     @Id
     private String id;
     private String code;
-    private String type;
+    private ConsultationType type;
+    private ConsultationStatus status;
     private String consultantCode;
     private String patientCode;
     private String diagnosis;

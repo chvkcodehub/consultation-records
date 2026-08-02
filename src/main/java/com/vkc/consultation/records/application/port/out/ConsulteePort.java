@@ -11,6 +11,7 @@ public interface ConsulteePort {
     List<Consultee> findAll();
     Optional<Consultee> findById(@NonNull String id);
     Optional<Consultee> findByCode(String code);
+    Optional<Consultee> findByEmail(String email);
     Consultee save(@NonNull Consultee consultee);
     boolean existsById(@NonNull String id);
     void deleteById(@NonNull String id);

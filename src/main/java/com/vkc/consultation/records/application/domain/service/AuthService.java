@@ -1,7 +1,7 @@
 package com.vkc.consultation.records.application.domain.service;
 
 import java.time.Instant;
-import java.util.Set;
+import java.util.Date;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
@@ -9,8 +9,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.vkc.consultation.records.application.domain.model.Consultee;
+import com.vkc.consultation.records.application.domain.model.Role;
 import com.vkc.consultation.records.application.domain.model.User;
+import com.vkc.consultation.records.application.port.in.AuthResult;
 import com.vkc.consultation.records.application.port.in.AuthUseCase;
+import com.vkc.consultation.records.application.port.in.RegisterConsulteeCommand;
+import com.vkc.consultation.records.application.port.out.ConsulteePort;
 import com.vkc.consultation.records.application.port.out.TokenPort;
 import com.vkc.consultation.records.application.port.out.UserPort;
 
@@ -18,37 +23,79 @@ import com.vkc.consultation.records.application.port.out.UserPort;
 public class AuthService implements AuthUseCase {
 
     private final UserPort userPort;
+    private final ConsulteePort consulteePort;
     private final PasswordEncoder passwordEncoder;
     private final TokenPort tokenPort;
 
-    public AuthService(UserPort userPort, PasswordEncoder passwordEncoder, TokenPort tokenPort) {
+    public AuthService(UserPort userPort, ConsulteePort consulteePort, PasswordEncoder passwordEncoder,
+            TokenPort tokenPort) {
         this.userPort = userPort;
+        this.consulteePort = consulteePort;
         this.passwordEncoder = passwordEncoder;
         this.tokenPort = tokenPort;
     }
 
     @Override
-    public String register(String email, String password) {
+    public AuthResult register(String email, String password) {
         if (userPort.existsByEmail(email)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already registered");
         }
         User user = new User();
         user.setEmail(email);
         user.setPasswordHash(passwordEncoder.encode(password));
-        user.setRoles(Set.of("ROLE_USER"));
+        user.setRole(Role.ADMIN);
         user.setCreatedAt(Instant.now());
         userPort.save(user);
-        return tokenPort.generateToken(email);
+        String token = tokenPort.generateToken(email, Role.ADMIN.name(), null);
+        return new AuthResult(token, Role.ADMIN.name(), null);
     }
 
     @Override
-    public String login(String email, String password) {
+    public AuthResult login(String email, String password) {
         User user = userPort.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
         if (!passwordEncoder.matches(password, user.getPasswordHash())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
         }
-        return tokenPort.generateToken(email);
+        String role = user.getRole().name();
+        String token = tokenPort.generateToken(email, role, user.getConsulteeCode());
+        return new AuthResult(token, role, user.getConsulteeCode());
+    }
+
+    @Override
+    public AuthResult registerConsultee(RegisterConsulteeCommand command) {
+        if (userPort.existsByEmail(command.email())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already registered");
+        }
+
+        String consulteeCode = consulteePort.findByEmail(command.email())
+                .map(Consultee::getCode)
+                .orElseGet(() -> createConsultee(command));
+
+        User user = new User();
+        user.setEmail(command.email());
+        user.setPasswordHash(passwordEncoder.encode(command.password()));
+        user.setRole(Role.CONSULTEE);
+        user.setConsulteeCode(consulteeCode);
+        user.setCreatedAt(Instant.now());
+        userPort.save(user);
+
+        String token = tokenPort.generateToken(command.email(), Role.CONSULTEE.name(), consulteeCode);
+        return new AuthResult(token, Role.CONSULTEE.name(), consulteeCode);
+    }
+
+    private String createConsultee(RegisterConsulteeCommand command) {
+        Consultee consultee = new Consultee();
+        consultee.setCode("P-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+        consultee.setName(command.name());
+        consultee.setGender(command.gender());
+        consultee.setDob(command.dob());
+        consultee.setAddress(command.address());
+        consultee.setEmail(command.email());
+        consultee.setPhone(command.phone());
+        consultee.setStartDate(new Date());
+        consultee.setRecoveryStatus("Not Started");
+        return consulteePort.save(consultee).getCode();
     }
 
     @Override

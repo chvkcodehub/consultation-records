@@ -12,6 +12,7 @@ public class ConsultationMapper {
         domain.setId(doc.getId());
         domain.setCode(doc.getCode());
         domain.setType(doc.getType());
+        domain.setStatus(doc.getStatus());
         domain.setConsultantCode(doc.getConsultantCode());
         domain.setPatientCode(doc.getPatientCode());
         domain.setDiagnosis(doc.getDiagnosis());
@@ -30,6 +31,7 @@ public class ConsultationMapper {
         doc.setId(domain.getId());
         doc.setCode(domain.getCode());
         doc.setType(domain.getType());
+        doc.setStatus(domain.getStatus());
         doc.setConsultantCode(domain.getConsultantCode());
         doc.setPatientCode(domain.getPatientCode());
         doc.setDiagnosis(domain.getDiagnosis());

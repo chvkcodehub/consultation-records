@@ -38,6 +38,11 @@ public class ConsulteeAdapter implements ConsulteePort {
     }
 
     @Override
+    public Optional<Consultee> findByEmail(String email) {
+        return consulteeRepository.findByEmail(email).map(ConsulteeMapper::toDomain);
+    }
+
+    @Override
     public Consultee save(@NonNull Consultee consultee) {
         return ConsulteeMapper.toDomain(
                 consulteeRepository.save(ConsulteeMapper.toDocument(consultee)));

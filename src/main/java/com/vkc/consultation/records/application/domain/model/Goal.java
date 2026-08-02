@@ -7,7 +7,6 @@ import lombok.Data;
 @Data
 public class Goal {
     private String id;
-    private String code;
     private String name;
     private String description;
     private String importance;

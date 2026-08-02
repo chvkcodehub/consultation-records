@@ -12,7 +12,6 @@ import lombok.Data;
 public class GoalDocument {
     @Id
     private String id;
-    private String code;
     private String name;
     private String description;
     private String importance;

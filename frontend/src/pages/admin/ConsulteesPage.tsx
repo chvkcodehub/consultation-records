@@ -4,7 +4,6 @@ import type { Consultee } from "../../types";
 import { formatDate, toDateInputValue } from "../../utils/format";
 
 const fields: FieldConfig[] = [
-  { name: "code", label: "Code", type: "text", required: true },
   { name: "name", label: "Name", type: "text", required: true },
   { name: "gender", label: "Gender", type: "text" },
   { name: "dob", label: "Date of birth", type: "date" },
@@ -23,14 +22,12 @@ export function ConsulteesPage() {
       api={consulteesApi}
       fields={fields}
       columns={[
-        { key: "code", label: "Code" },
         { key: "name", label: "Name" },
         { key: "email", label: "Email" },
         { key: "condition", label: "Condition" },
         { key: "startDate", label: "Start date", render: (item) => formatDate(item.startDate) },
       ]}
       toFormValues={(item) => ({
-        code: item?.code ?? "",
         name: item?.name ?? "",
         gender: item?.gender ?? "",
         dob: toDateInputValue(item?.dob ?? null),
@@ -42,7 +39,6 @@ export function ConsulteesPage() {
         recoveryStatus: item?.recoveryStatus ?? "",
       })}
       fromFormValues={(values): ConsulteeInput => ({
-        code: values.code,
         name: values.name,
         gender: values.gender,
         dob: values.dob || null,

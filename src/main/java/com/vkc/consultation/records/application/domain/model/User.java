@@ -10,7 +10,7 @@ public class User {
     private String email;
     private String passwordHash;
     private Role role;
-    private String consulteeCode;
+    private String consulteeId;
     private Instant createdAt;
     private String resetToken;
     private Instant resetTokenExpiry;

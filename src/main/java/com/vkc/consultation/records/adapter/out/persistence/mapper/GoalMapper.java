@@ -10,7 +10,6 @@ public class GoalMapper {
     public static Goal toDomain(GoalDocument doc) {
         Goal goal = new Goal();
         goal.setId(doc.getId());
-        goal.setCode(doc.getCode());
         goal.setName(doc.getName());
         goal.setDescription(doc.getDescription());
         goal.setImportance(doc.getImportance());
@@ -28,7 +27,6 @@ public class GoalMapper {
     public static GoalDocument toDocument(Goal goal) {
         GoalDocument doc = new GoalDocument();
         doc.setId(goal.getId());
-        doc.setCode(goal.getCode());
         doc.setName(goal.getName());
         doc.setDescription(goal.getDescription());
         doc.setImportance(goal.getImportance());

@@ -14,7 +14,7 @@ public class UserMapper {
         user.setEmail(doc.getEmail());
         user.setPasswordHash(doc.getPasswordHash());
         user.setRole(doc.getRole() != null ? Role.valueOf(doc.getRole()) : null);
-        user.setConsulteeCode(doc.getConsulteeCode());
+        user.setConsulteeId(doc.getConsulteeId());
         user.setCreatedAt(doc.getCreatedAt());
         user.setResetToken(doc.getResetToken());
         user.setResetTokenExpiry(doc.getResetTokenExpiry());
@@ -27,7 +27,7 @@ public class UserMapper {
         doc.setEmail(user.getEmail());
         doc.setPasswordHash(user.getPasswordHash());
         doc.setRole(user.getRole() != null ? user.getRole().name() : null);
-        doc.setConsulteeCode(user.getConsulteeCode());
+        doc.setConsulteeId(user.getConsulteeId());
         doc.setCreatedAt(user.getCreatedAt());
         doc.setResetToken(user.getResetToken());
         doc.setResetTokenExpiry(user.getResetTokenExpiry());

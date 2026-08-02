@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class ConsultantSummaryBreakdown {
-    private String consultantCode;
+    private String consultantId;
     private String consultantName;
     private long sessionCount;
     private List<ConsultationTypeCount> byType;

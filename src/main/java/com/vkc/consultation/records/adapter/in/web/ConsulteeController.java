@@ -67,20 +67,6 @@ public class ConsulteeController {
         return ConsulteeResponse.from(consulteeUseCase.findConsulteeById(id));
     }
 
-    @GetMapping("/code/{code}")
-    @ResponseBody
-    @Operation(summary = "Find consultee by business code", description = "Returns a single consultee by their unique business code.")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Consultee found",
-                content = @Content(schema = @Schema(implementation = ConsulteeResponse.class))),
-        @ApiResponse(responseCode = "404", description = "Consultee not found", content = @Content)
-    })
-    public ConsulteeResponse findConsulteeByCode(
-            @Parameter(description = "Business code of the consultee", required = true)
-            @PathVariable String code) {
-        return ConsulteeResponse.from(consulteeUseCase.findConsulteeByCode(code));
-    }
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -95,7 +81,7 @@ public class ConsulteeController {
                     description = "Consultee details to create", required = true)
             @RequestBody CreateConsulteeRequest request) {
         CreateConsulteeCommand command = new CreateConsulteeCommand(
-                request.code(), request.name(), request.gender(),
+                request.name(), request.gender(),
                 request.dob(), request.condition(), request.address(),
                 request.phone(), request.email(), request.startDate());
         return ConsulteeResponse.from(consulteeUseCase.createConsultee(command));
@@ -117,7 +103,7 @@ public class ConsulteeController {
                     description = "Updated consultee details", required = true)
             @RequestBody UpdateConsulteeRequest request) {
         UpdateConsulteeCommand command = new UpdateConsulteeCommand(
-                request.code(), request.name(), request.gender(),
+                request.name(), request.gender(),
                 request.dob(), request.condition(), request.address(),
                 request.phone(), request.email(), request.startDate());
         return ConsulteeResponse.from(consulteeUseCase.updateConsultee(id, command));

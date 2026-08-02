@@ -6,7 +6,7 @@ interface AuthState {
   token: string | null;
   role: Role | null;
   email: string | null;
-  consulteeCode: string | null;
+  consulteeId: string | null;
 }
 
 interface AuthContextValue extends AuthState {
@@ -20,12 +20,12 @@ const STORAGE_KEY = "auth";
 function loadState(): AuthState {
   const raw = localStorage.getItem(STORAGE_KEY);
   if (!raw) {
-    return { token: null, role: null, email: null, consulteeCode: null };
+    return { token: null, role: null, email: null, consulteeId: null };
   }
   try {
     return JSON.parse(raw) as AuthState;
   } catch {
-    return { token: null, role: null, email: null, consulteeCode: null };
+    return { token: null, role: null, email: null, consulteeId: null };
   }
 }
 
@@ -39,7 +39,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       token: auth.token,
       role: auth.role,
       email,
-      consulteeCode: auth.consulteeCode,
+      consulteeId: auth.consulteeId,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
     localStorage.setItem("token", auth.token);
@@ -49,7 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = useCallback(() => {
     localStorage.removeItem(STORAGE_KEY);
     localStorage.removeItem("token");
-    setState({ token: null, role: null, email: null, consulteeCode: null });
+    setState({ token: null, role: null, email: null, consulteeId: null });
   }, []);
 
   useEffect(() => {

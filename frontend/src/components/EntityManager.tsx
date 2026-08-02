@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { ApiError } from "../api/client";
+import { Icon } from "./Icon";
 
 export interface FieldOption {
   value: string;
@@ -12,6 +13,7 @@ export interface FieldConfig {
   type: "text" | "number" | "date" | "datetime-local" | "select" | "textarea";
   options?: FieldOption[];
   required?: boolean;
+  disabledOnEdit?: boolean;
 }
 
 export interface ColumnConfig<T> {
@@ -125,6 +127,7 @@ export function EntityManager<T extends { id: string }, TInput>({
         <h2>{title}</h2>
         {!showForm && (
           <button className="primary" onClick={openCreate}>
+            <Icon name="plus" size={16} />
             Add new
           </button>
         )}
@@ -135,40 +138,46 @@ export function EntityManager<T extends { id: string }, TInput>({
       {showForm && (
         <form className="card" onSubmit={handleSubmit}>
           <div className="form-grid">
-            {fields.map((field) => (
-              <label key={field.name} className="form-field">
-                {field.label}
-                {field.type === "select" ? (
-                  <select
-                    value={values[field.name] ?? ""}
-                    required={field.required}
-                    onChange={(e) => handleChange(field.name, e.target.value)}
-                  >
-                    <option value="" disabled>
-                      Select...
-                    </option>
-                    {field.options?.map((opt) => (
-                      <option key={opt.value} value={opt.value}>
-                        {opt.label}
+            {fields.map((field) => {
+              const isDisabled = Boolean(editing && field.disabledOnEdit);
+              return (
+                <label key={field.name} className="form-field">
+                  {field.label}
+                  {field.type === "select" ? (
+                    <select
+                      value={values[field.name] ?? ""}
+                      required={field.required}
+                      disabled={isDisabled}
+                      onChange={(e) => handleChange(field.name, e.target.value)}
+                    >
+                      <option value="" disabled>
+                        Select...
                       </option>
-                    ))}
-                  </select>
-                ) : field.type === "textarea" ? (
-                  <textarea
-                    value={values[field.name] ?? ""}
-                    required={field.required}
-                    onChange={(e) => handleChange(field.name, e.target.value)}
-                  />
-                ) : (
-                  <input
-                    type={field.type}
-                    value={values[field.name] ?? ""}
-                    required={field.required}
-                    onChange={(e) => handleChange(field.name, e.target.value)}
-                  />
-                )}
-              </label>
-            ))}
+                      {field.options?.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
+                  ) : field.type === "textarea" ? (
+                    <textarea
+                      value={values[field.name] ?? ""}
+                      required={field.required}
+                      disabled={isDisabled}
+                      onChange={(e) => handleChange(field.name, e.target.value)}
+                    />
+                  ) : (
+                    <input
+                      type={field.type}
+                      value={values[field.name] ?? ""}
+                      required={field.required}
+                      disabled={isDisabled}
+                      onChange={(e) => handleChange(field.name, e.target.value)}
+                    />
+                  )}
+                </label>
+              );
+            })}
           </div>
           <div className="form-actions">
             <button className="primary" type="submit" disabled={saving}>
@@ -182,40 +191,55 @@ export function EntityManager<T extends { id: string }, TInput>({
       )}
 
       {loading ? (
-        <p>Loading...</p>
+        <div className="loading-state">
+          <span className="spinner" />
+          Loading...
+        </div>
+      ) : items.length === 0 ? (
+        <div className="table-scroll">
+          <div className="empty-state">
+            <span className="tile-icon">
+              <Icon name="inbox" size={20} />
+            </span>
+            <span>No records yet.</span>
+          </div>
+        </div>
       ) : (
-        <table>
-          <thead>
-            <tr>
-              {columns.map((col) => (
-                <th key={col.key}>{col.label}</th>
-              ))}
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((item) => (
-              <tr key={item.id}>
-                {columns.map((col) => (
-                  <td key={col.key}>
-                    {col.render ? col.render(item) : String((item as Record<string, unknown>)[col.key] ?? "-")}
-                  </td>
-                ))}
-                <td>
-                  <button onClick={() => openEdit(item)}>Edit</button>{" "}
-                  <button className="danger" onClick={() => handleDelete(item)}>
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {items.length === 0 && (
+        <div className="table-scroll">
+          <table>
+            <thead>
               <tr>
-                <td colSpan={columns.length + 1}>No records yet.</td>
+                {columns.map((col) => (
+                  <th key={col.key}>{col.label}</th>
+                ))}
+                <th />
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {items.map((item) => (
+                <tr key={item.id}>
+                  {columns.map((col) => (
+                    <td key={col.key}>
+                      {col.render ? col.render(item) : String((item as Record<string, unknown>)[col.key] ?? "-")}
+                    </td>
+                  ))}
+                  <td>
+                    <div className="row-actions">
+                      <button className="ghost icon-btn" onClick={() => openEdit(item)}>
+                        <Icon name="edit" size={15} />
+                        Edit
+                      </button>
+                      <button className="danger icon-btn" onClick={() => handleDelete(item)}>
+                        <Icon name="trash" size={15} />
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

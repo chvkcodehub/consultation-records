@@ -3,7 +3,6 @@ import { consultantsApi, type ConsultantInput } from "../../api/consultantsApi";
 import type { Consultant } from "../../types";
 
 const fields: FieldConfig[] = [
-  { name: "code", label: "Code", type: "text", required: true },
   { name: "name", label: "Name", type: "text", required: true },
   { name: "speciality", label: "Speciality", type: "text", required: true },
   { name: "qualification", label: "Qualification", type: "text" },
@@ -18,14 +17,12 @@ export function ConsultantsPage() {
       api={consultantsApi}
       fields={fields}
       columns={[
-        { key: "code", label: "Code" },
         { key: "name", label: "Name" },
         { key: "speciality", label: "Speciality" },
         { key: "experienceYears", label: "Experience" },
         { key: "fee", label: "Fee" },
       ]}
       toFormValues={(item) => ({
-        code: item?.code ?? "",
         name: item?.name ?? "",
         speciality: item?.speciality ?? "",
         qualification: item?.qualification ?? "",
@@ -33,7 +30,6 @@ export function ConsultantsPage() {
         fee: item ? String(item.fee) : "0",
       })}
       fromFormValues={(values): ConsultantInput => ({
-        code: values.code,
         name: values.name,
         speciality: values.speciality,
         qualification: values.qualification,

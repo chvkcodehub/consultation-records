@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "Goal details returned by the API")
 public record GoalResponse(
         @Schema(description = "MongoDB document ID", example = "6624a1f3e2b4c30012d4f903") String id,
-        @Schema(description = "Unique business code", example = "GL001") String code,
         @Schema(description = "Name of the goal", example = "Reduce blood pressure") String name,
         @Schema(description = "Detailed description of the goal") String description,
         @Schema(description = "Importance level", example = "High") String importance,
@@ -25,7 +24,6 @@ public record GoalResponse(
     public static GoalResponse from(Goal g) {
         return new GoalResponse(
                 g.getId(),
-                g.getCode(),
                 g.getName(),
                 g.getDescription(),
                 g.getImportance(),

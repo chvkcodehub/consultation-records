@@ -3,6 +3,21 @@ import { portalApi } from "../../api/portalApi";
 import { ApiError } from "../../api/client";
 import type { Consultee } from "../../types";
 import { formatDate } from "../../utils/format";
+import { Icon, type IconName } from "../../components/Icon";
+
+function DetailRow({ icon, label, value }: { icon: IconName; label: string; value: React.ReactNode }) {
+  return (
+    <div className="detail-row">
+      <span className="tile-icon">
+        <Icon name={icon} size={16} />
+      </span>
+      <div>
+        <div className="detail-label">{label}</div>
+        <div className="detail-value">{value}</div>
+      </div>
+    </div>
+  );
+}
 
 export function MyProfilePage() {
   const [profile, setProfile] = useState<Consultee | null>(null);
@@ -18,41 +33,23 @@ export function MyProfilePage() {
   return (
     <div>
       <div className="page-header">
-        <h2>My Profile</h2>
+        <div>
+          <h2>My Profile</h2>
+          <p className="subtitle">Your details on file with the practice.</p>
+        </div>
       </div>
       {error && <p className="error-text">{error}</p>}
       {profile && (
-        <div className="card">
-          <p>
-            <strong>Code:</strong> {profile.code}
-          </p>
-          <p>
-            <strong>Name:</strong> {profile.name}
-          </p>
-          <p>
-            <strong>Gender:</strong> {profile.gender || "-"}
-          </p>
-          <p>
-            <strong>Date of birth:</strong> {formatDate(profile.dob)}
-          </p>
-          <p>
-            <strong>Email:</strong> {profile.email}
-          </p>
-          <p>
-            <strong>Phone:</strong> {profile.phone || "-"}
-          </p>
-          <p>
-            <strong>Address:</strong> {profile.address || "-"}
-          </p>
-          <p>
-            <strong>Care started:</strong> {formatDate(profile.startDate)}
-          </p>
-          <p>
-            <strong>Condition:</strong> {profile.condition || "-"}
-          </p>
-          <p>
-            <strong>Recovery status:</strong> {profile.recoveryStatus || "-"}
-          </p>
+        <div className="card detail-grid">
+          <DetailRow icon="user-circle" label="Name" value={profile.name} />
+          <DetailRow icon="users" label="Gender" value={profile.gender || "-"} />
+          <DetailRow icon="calendar" label="Date of birth" value={formatDate(profile.dob)} />
+          <DetailRow icon="mail" label="Email" value={profile.email} />
+          <DetailRow icon="inbox" label="Phone" value={profile.phone || "-"} />
+          <DetailRow icon="inbox" label="Address" value={profile.address || "-"} />
+          <DetailRow icon="clock" label="Care started" value={formatDate(profile.startDate)} />
+          <DetailRow icon="target" label="Condition" value={profile.condition || "-"} />
+          <DetailRow icon="chart-pie" label="Recovery status" value={profile.recoveryStatus || "-"} />
         </div>
       )}
     </div>

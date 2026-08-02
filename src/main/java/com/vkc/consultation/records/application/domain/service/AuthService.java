@@ -58,8 +58,8 @@ public class AuthService implements AuthUseCase {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
         }
         String role = user.getRole().name();
-        String token = tokenPort.generateToken(email, role, user.getConsulteeCode());
-        return new AuthResult(token, role, user.getConsulteeCode());
+        String token = tokenPort.generateToken(email, role, user.getConsulteeId());
+        return new AuthResult(token, role, user.getConsulteeId());
     }
 
     @Override
@@ -68,25 +68,24 @@ public class AuthService implements AuthUseCase {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already registered");
         }
 
-        String consulteeCode = consulteePort.findByEmail(command.email())
-                .map(Consultee::getCode)
+        String consulteeId = consulteePort.findByEmail(command.email())
+                .map(Consultee::getId)
                 .orElseGet(() -> createConsultee(command));
 
         User user = new User();
         user.setEmail(command.email());
         user.setPasswordHash(passwordEncoder.encode(command.password()));
         user.setRole(Role.CONSULTEE);
-        user.setConsulteeCode(consulteeCode);
+        user.setConsulteeId(consulteeId);
         user.setCreatedAt(Instant.now());
         userPort.save(user);
 
-        String token = tokenPort.generateToken(command.email(), Role.CONSULTEE.name(), consulteeCode);
-        return new AuthResult(token, Role.CONSULTEE.name(), consulteeCode);
+        String token = tokenPort.generateToken(command.email(), Role.CONSULTEE.name(), consulteeId);
+        return new AuthResult(token, Role.CONSULTEE.name(), consulteeId);
     }
 
     private String createConsultee(RegisterConsulteeCommand command) {
         Consultee consultee = new Consultee();
-        consultee.setCode("P-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
         consultee.setName(command.name());
         consultee.setGender(command.gender());
         consultee.setDob(command.dob());
@@ -95,7 +94,7 @@ public class AuthService implements AuthUseCase {
         consultee.setPhone(command.phone());
         consultee.setStartDate(new Date());
         consultee.setRecoveryStatus("Not Started");
-        return consulteePort.save(consultee).getCode();
+        return consulteePort.save(consultee).getId();
     }
 
     @Override

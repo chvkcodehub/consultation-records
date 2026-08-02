@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { authApi } from "../../api/authApi";
 import { ApiError } from "../../api/client";
 import { useAuth } from "../../auth/useAuth";
+import { AuthShell } from "../../components/AuthShell";
+import { Icon } from "../../components/Icon";
 
 export function ConsulteeRegisterPage() {
   const { login } = useAuth();
@@ -40,9 +42,8 @@ export function ConsulteeRegisterPage() {
   };
 
   return (
-    <div className="auth-page">
-      <form className="auth-card" style={{ maxWidth: 460 }} onSubmit={handleSubmit}>
-        <h1>Create your account</h1>
+    <AuthShell title="Create your account" subtitle="Register to book and track your consultations." maxWidth={480}>
+      <form onSubmit={handleSubmit}>
         <div className="form-grid">
           <label className="form-field">
             Full name
@@ -50,16 +51,22 @@ export function ConsulteeRegisterPage() {
           </label>
           <label className="form-field">
             Email
-            <input type="email" value={form.email} onChange={(e) => update("email", e.target.value)} required />
+            <div className="field-icon">
+              <Icon name="mail" size={16} />
+              <input type="email" value={form.email} onChange={(e) => update("email", e.target.value)} required />
+            </div>
           </label>
           <label className="form-field">
             Password
-            <input
-              type="password"
-              value={form.password}
-              onChange={(e) => update("password", e.target.value)}
-              required
-            />
+            <div className="field-icon">
+              <Icon name="lock" size={16} />
+              <input
+                type="password"
+                value={form.password}
+                onChange={(e) => update("password", e.target.value)}
+                required
+              />
+            </div>
           </label>
           <label className="form-field">
             Gender
@@ -80,14 +87,14 @@ export function ConsulteeRegisterPage() {
         </div>
         {error && <p className="error-text">{error}</p>}
         <div className="form-actions">
-          <button className="primary" type="submit" disabled={submitting}>
+          <button className="primary" type="submit" disabled={submitting} style={{ width: "100%", justifyContent: "center" }}>
             Create account
           </button>
         </div>
-        <p className="auth-links">
-          Already registered? <Link to="/consultee/login">Sign in</Link>
-        </p>
       </form>
-    </div>
+      <p className="auth-links">
+        Already registered? <Link to="/consultee/login">Sign in</Link>
+      </p>
+    </AuthShell>
   );
 }

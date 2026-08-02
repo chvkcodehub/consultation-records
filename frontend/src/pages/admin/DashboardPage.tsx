@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { reportsApi } from "../../api/reportsApi";
 import type { ConsultantSummaryReport, ConsulteeSessionsReport } from "../../types";
+import { Icon } from "../../components/Icon";
 
 export function DashboardPage() {
   const [consulteeReport, setConsulteeReport] = useState<ConsulteeSessionsReport | null>(null);
@@ -15,18 +16,30 @@ export function DashboardPage() {
   return (
     <div>
       <div className="page-header">
-        <h2>Dashboard</h2>
+        <div>
+          <h2>Dashboard</h2>
+          <p className="subtitle">A quick look at how the practice is running.</p>
+        </div>
       </div>
       <div className="stat-row">
         <div className="stat-tile">
+          <span className="tile-icon">
+            <Icon name="calendar" size={18} />
+          </span>
           <div className="label">Total sessions</div>
           <div className="value">{consulteeReport?.totalSessions ?? "-"}</div>
         </div>
         <div className="stat-tile">
+          <span className="tile-icon teal">
+            <Icon name="users" size={18} />
+          </span>
           <div className="label">Consultees with sessions</div>
           <div className="value">{consulteeReport?.breakdown.length ?? "-"}</div>
         </div>
         <div className="stat-tile">
+          <span className="tile-icon">
+            <Icon name="stethoscope" size={18} />
+          </span>
           <div className="label">Active consultants</div>
           <div className="value">{consultantReport?.totalConsultants ?? "-"}</div>
         </div>

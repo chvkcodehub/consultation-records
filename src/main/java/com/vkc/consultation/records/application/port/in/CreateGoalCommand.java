@@ -3,7 +3,6 @@ package com.vkc.consultation.records.application.port.in;
 import java.util.Date;
 
 public record CreateGoalCommand(
-        String code,
         String name,
         String description,
         String importance,

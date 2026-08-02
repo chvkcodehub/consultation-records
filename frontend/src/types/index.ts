@@ -29,12 +29,11 @@ export const CONSULTATION_STATUSES: ConsultationStatus[] = ["BOOKED", "COMPLETED
 export interface AuthResponse {
   token: string;
   role: Role;
-  consulteeCode: string | null;
+  consulteeId: string | null;
 }
 
 export interface Consultant {
   id: string;
-  code: string;
   name: string;
   speciality: string;
   qualification: string;
@@ -44,7 +43,6 @@ export interface Consultant {
 
 export interface Consultee {
   id: string;
-  code: string;
   name: string;
   gender: string;
   dob: ApiDate;
@@ -58,11 +56,12 @@ export interface Consultee {
 
 export interface Consultation {
   id: string;
-  code: string;
   type: ConsultationType;
   status: ConsultationStatus;
-  consultantCode: string;
-  patientCode: string;
+  consultantId: string;
+  consultantName: string | null;
+  patientId: string;
+  patientName: string | null;
   diagnosis: string | null;
   prescription: string | null;
   comments: string | null;
@@ -75,7 +74,6 @@ export interface Consultation {
 
 export interface Goal {
   id: string;
-  code: string;
   name: string;
   description: string;
   importance: string;
@@ -90,7 +88,7 @@ export interface Goal {
 }
 
 export interface ConsulteeSessionBreakdown {
-  consulteeCode: string;
+  consulteeId: string;
   consulteeName: string | null;
   sessionCount: number;
 }
@@ -106,7 +104,7 @@ export interface ConsultationTypeCount {
 }
 
 export interface ConsultantSummaryBreakdown {
-  consultantCode: string;
+  consultantId: string;
   consultantName: string | null;
   sessionCount: number;
   byType: ConsultationTypeCount[];

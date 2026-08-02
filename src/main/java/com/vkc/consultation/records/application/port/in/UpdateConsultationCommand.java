@@ -7,11 +7,10 @@ import com.vkc.consultation.records.application.domain.model.ConsultationStatus;
 import com.vkc.consultation.records.application.domain.model.ConsultationType;
 
 public record UpdateConsultationCommand(
-        String code,
         ConsultationType type,
         ConsultationStatus status,
-        String consultantCode,
-        String patientCode,
+        String consultantId,
+        String patientId,
         String diagnosis,
         String prescription,
         String comments,

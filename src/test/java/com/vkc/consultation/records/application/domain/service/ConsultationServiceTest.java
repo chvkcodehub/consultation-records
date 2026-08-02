@@ -34,9 +34,9 @@ class ConsultationServiceTest {
     @Test
     void bookConsultation_setsBookedStatusAndCopiesConsultantFee() {
         Consultant consultant = new Consultant();
-        consultant.setCode("DR001");
+        consultant.setId("DR001");
         consultant.setFee(150.0);
-        when(consultantPort.findByCode("DR001")).thenReturn(Optional.of(consultant));
+        when(consultantPort.findById("DR001")).thenReturn(Optional.of(consultant));
         when(consultationPort.saveConsultation(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         ConsultationService service = new ConsultationService(consultationPort, consultantPort);
@@ -46,15 +46,14 @@ class ConsultationServiceTest {
         Consultation result = service.bookConsultation(command);
 
         assertThat(result.getStatus()).isEqualTo(ConsultationStatus.BOOKED);
-        assertThat(result.getPatientCode()).isEqualTo("PT001");
-        assertThat(result.getConsultantCode()).isEqualTo("DR001");
+        assertThat(result.getPatientId()).isEqualTo("PT001");
+        assertThat(result.getConsultantId()).isEqualTo("DR001");
         assertThat(result.getFee()).isEqualByComparingTo("150.0");
-        assertThat(result.getCode()).isNotBlank();
     }
 
     @Test
     void bookConsultation_throwsNotFoundWhenConsultantMissing() {
-        when(consultantPort.findByCode("UNKNOWN")).thenReturn(Optional.empty());
+        when(consultantPort.findById("UNKNOWN")).thenReturn(Optional.empty());
 
         ConsultationService service = new ConsultationService(consultationPort, consultantPort);
         BookConsultationCommand command = new BookConsultationCommand(
@@ -69,7 +68,7 @@ class ConsultationServiceTest {
     void findConsultationForPatient_returnsRecordWhenOwnedByPatient() {
         Consultation consultation = new Consultation();
         consultation.setId("abc123");
-        consultation.setPatientCode("PT001");
+        consultation.setPatientId("PT001");
         when(consultationPort.findConsultationById("abc123")).thenReturn(consultation);
 
         ConsultationService service = new ConsultationService(consultationPort, consultantPort);
@@ -81,7 +80,7 @@ class ConsultationServiceTest {
     void findConsultationForPatient_throwsForbiddenWhenNotOwner() {
         Consultation consultation = new Consultation();
         consultation.setId("abc123");
-        consultation.setPatientCode("PT001");
+        consultation.setPatientId("PT001");
         when(consultationPort.findConsultationById("abc123")).thenReturn(consultation);
 
         ConsultationService service = new ConsultationService(consultationPort, consultantPort);

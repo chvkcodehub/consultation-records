@@ -3,7 +3,6 @@ import { goalsApi, type GoalFormInput } from "../../api/goalsApi";
 import type { Goal } from "../../types";
 
 const fields: FieldConfig[] = [
-  { name: "code", label: "Code", type: "text", required: true },
   { name: "name", label: "Name", type: "text", required: true },
   { name: "description", label: "Description", type: "textarea" },
   { name: "importance", label: "Importance", type: "text" },
@@ -22,14 +21,12 @@ export function GoalsPage() {
       api={goalsApi}
       fields={fields}
       columns={[
-        { key: "code", label: "Code" },
         { key: "name", label: "Name" },
         { key: "importance", label: "Importance" },
         { key: "difficulty", label: "Difficulty" },
         { key: "status", label: "Status" },
       ]}
       toFormValues={(item) => ({
-        code: item?.code ?? "",
         name: item?.name ?? "",
         description: item?.description ?? "",
         importance: item?.importance ?? "",
@@ -41,7 +38,6 @@ export function GoalsPage() {
         status: item?.status ?? "",
       })}
       fromFormValues={(values): GoalFormInput => ({
-        code: values.code,
         name: values.name,
         description: values.description,
         importance: values.importance,

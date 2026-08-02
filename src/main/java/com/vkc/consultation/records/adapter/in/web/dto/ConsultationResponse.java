@@ -2,6 +2,7 @@ package com.vkc.consultation.records.adapter.in.web.dto;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Map;
 
 import com.vkc.consultation.records.application.domain.model.Consultation;
 import com.vkc.consultation.records.application.domain.model.ConsultationStatus;
@@ -9,11 +10,12 @@ import com.vkc.consultation.records.application.domain.model.ConsultationType;
 
 public record ConsultationResponse(
         String id,
-        String code,
         ConsultationType type,
         ConsultationStatus status,
-        String consultantCode,
-        String patientCode,
+        String consultantId,
+        String consultantName,
+        String patientId,
+        String patientName,
         String diagnosis,
         String prescription,
         String comments,
@@ -23,14 +25,16 @@ public record ConsultationResponse(
         String createdBy,
         BigDecimal fee) {
 
-    public static ConsultationResponse from(Consultation c) {
+    public static ConsultationResponse from(Consultation c, Map<String, String> consultantNamesById,
+            Map<String, String> patientNamesById) {
         return new ConsultationResponse(
                 c.getId(),
-                c.getCode(),
                 c.getType(),
                 c.getStatus(),
-                c.getConsultantCode(),
-                c.getPatientCode(),
+                c.getConsultantId(),
+                consultantNamesById.get(c.getConsultantId()),
+                c.getPatientId(),
+                patientNamesById.get(c.getPatientId()),
                 c.getDiagnosis(),
                 c.getPrescription(),
                 c.getComments(),

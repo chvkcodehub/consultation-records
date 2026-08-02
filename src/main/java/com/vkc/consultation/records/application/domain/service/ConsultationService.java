@@ -3,7 +3,6 @@ package com.vkc.consultation.records.application.domain.service;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
@@ -42,28 +41,22 @@ public class ConsultationService implements ConsultationUseCase {
     }
 
     @Override
-    public Consultation findConsultationByCode(String code) {
-        return consultationPort.findConsultationByCode(code);
+    public List<Consultation> findConsultationByConsultant(String consultantId) {
+        return consultationPort.findConsultationsByConsultant(consultantId);
     }
 
     @Override
-    public List<Consultation> findConsultationByConsultant(String consultantCode) {
-        return consultationPort.findConsultationsByConsultant(consultantCode);
-    }
-
-    @Override
-    public List<Consultation> findConsultationByPatient(String patientCode) {
-        return consultationPort.findConsultationsByPatient(patientCode);
+    public List<Consultation> findConsultationByPatient(String patientId) {
+        return consultationPort.findConsultationsByPatient(patientId);
     }
 
     @Override
     public Consultation createConsultation(@NonNull CreateConsultationCommand command) {
         Consultation consultation = new Consultation();
-        consultation.setCode(command.code());
         consultation.setType(command.type());
         consultation.setStatus(command.status() != null ? command.status() : ConsultationStatus.BOOKED);
-        consultation.setConsultantCode(command.consultantCode());
-        consultation.setPatientCode(command.patientCode());
+        consultation.setConsultantId(command.consultantId());
+        consultation.setPatientId(command.patientId());
         consultation.setDiagnosis(command.diagnosis());
         consultation.setPrescription(command.prescription());
         consultation.setComments(command.comments());
@@ -82,11 +75,10 @@ public class ConsultationService implements ConsultationUseCase {
         }
         Consultation consultation = new Consultation();
         consultation.setId(id);
-        consultation.setCode(command.code());
         consultation.setType(command.type());
         consultation.setStatus(command.status());
-        consultation.setConsultantCode(command.consultantCode());
-        consultation.setPatientCode(command.patientCode());
+        consultation.setConsultantId(command.consultantId());
+        consultation.setPatientId(command.patientId());
         consultation.setDiagnosis(command.diagnosis());
         consultation.setPrescription(command.prescription());
         consultation.setComments(command.comments());
@@ -108,16 +100,15 @@ public class ConsultationService implements ConsultationUseCase {
 
     @Override
     public Consultation bookConsultation(@NonNull BookConsultationCommand command) {
-        Consultant consultant = consultantPort.findByCode(command.consultantCode())
+        Consultant consultant = consultantPort.findById(command.consultantId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Consultant not found with code: " + command.consultantCode()));
+                        "Consultant not found with id: " + command.consultantId()));
 
         Consultation consultation = new Consultation();
-        consultation.setCode("CN-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
         consultation.setType(command.type());
         consultation.setStatus(ConsultationStatus.BOOKED);
-        consultation.setConsultantCode(command.consultantCode());
-        consultation.setPatientCode(command.patientCode());
+        consultation.setConsultantId(command.consultantId());
+        consultation.setPatientId(command.patientId());
         consultation.setComments(command.comments());
         consultation.setConsultationDate(command.consultationDate());
         consultation.setFee(BigDecimal.valueOf(consultant.getFee()));
@@ -126,9 +117,9 @@ public class ConsultationService implements ConsultationUseCase {
     }
 
     @Override
-    public Consultation findConsultationForPatient(@NonNull String id, @NonNull String patientCode) {
+    public Consultation findConsultationForPatient(@NonNull String id, @NonNull String patientId) {
         Consultation consultation = consultationPort.findConsultationById(id);
-        if (!patientCode.equals(consultation.getPatientCode())) {
+        if (!patientId.equals(consultation.getPatientId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not authorized to view this consultation");
         }
         return consultation;

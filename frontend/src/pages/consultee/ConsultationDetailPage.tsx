@@ -4,6 +4,21 @@ import { portalApi } from "../../api/portalApi";
 import { ApiError } from "../../api/client";
 import type { Consultation } from "../../types";
 import { formatDateTime, labelize } from "../../utils/format";
+import { Icon, type IconName } from "../../components/Icon";
+
+function DetailRow({ icon, label, value }: { icon: IconName; label: string; value: React.ReactNode }) {
+  return (
+    <div className="detail-row">
+      <span className="tile-icon">
+        <Icon name={icon} size={16} />
+      </span>
+      <div>
+        <div className="detail-label">{label}</div>
+        <div className="detail-value">{value}</div>
+      </div>
+    </div>
+  );
+}
 
 export function ConsultationDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -22,51 +37,37 @@ export function ConsultationDetailPage() {
     <div>
       <div className="page-header">
         <h2>Consultation Detail</h2>
-        <Link to="/consultee">Back to my consultations</Link>
+        <Link to="/consultee">
+          <button className="ghost icon-btn">
+            <Icon name="arrow-right" size={15} style={{ transform: "rotate(180deg)" }} />
+            Back to my consultations
+          </button>
+        </Link>
       </div>
       {error && <p className="error-text">{error}</p>}
       {consultation && (
-        <div className="card">
-          <p>
-            <strong>Code:</strong> {consultation.code}
-          </p>
-          <p>
-            <strong>Type:</strong> {labelize(consultation.type)}
-          </p>
-          <p>
-            <strong>Status:</strong> <span className={`badge status-${consultation.status}`}>{labelize(consultation.status)}</span>
-          </p>
-          <p>
-            <strong>Consultant:</strong> {consultation.consultantCode}
-          </p>
-          <p>
-            <strong>When:</strong> {formatDateTime(consultation.consultationDate)}
-          </p>
+        <div className="card detail-grid">
+          <DetailRow icon="target" label="Type" value={labelize(consultation.type)} />
+          <DetailRow
+            icon="clock"
+            label="Status"
+            value={<span className={`badge status-${consultation.status}`}>{labelize(consultation.status)}</span>}
+          />
+          <DetailRow
+            icon="stethoscope"
+            label="Consultant"
+            value={consultation.consultantName ?? consultation.consultantId}
+          />
+          <DetailRow icon="calendar" label="When" value={formatDateTime(consultation.consultationDate)} />
           {consultation.followUpDate && (
-            <p>
-              <strong>Follow-up:</strong> {formatDateTime(consultation.followUpDate)}
-            </p>
+            <DetailRow icon="calendar" label="Follow-up" value={formatDateTime(consultation.followUpDate)} />
           )}
-          {consultation.diagnosis && (
-            <p>
-              <strong>Diagnosis:</strong> {consultation.diagnosis}
-            </p>
-          )}
+          {consultation.diagnosis && <DetailRow icon="inbox" label="Diagnosis" value={consultation.diagnosis} />}
           {consultation.prescription && (
-            <p>
-              <strong>Prescription:</strong> {consultation.prescription}
-            </p>
+            <DetailRow icon="inbox" label="Prescription" value={consultation.prescription} />
           )}
-          {consultation.comments && (
-            <p>
-              <strong>Notes:</strong> {consultation.comments}
-            </p>
-          )}
-          {consultation.fee != null && (
-            <p>
-              <strong>Fee:</strong> {consultation.fee}
-            </p>
-          )}
+          {consultation.comments && <DetailRow icon="inbox" label="Notes" value={consultation.comments} />}
+          {consultation.fee != null && <DetailRow icon="chart-bar" label="Fee" value={consultation.fee} />}
         </div>
       )}
     </div>

@@ -30,7 +30,7 @@ public class JwtUtil implements TokenPort {
     }
 
     @Override
-    public String generateToken(String email, String role, String consulteeCode) {
+    public String generateToken(String email, String role, String consulteeId) {
         Instant now = Instant.now();
         JwtBuilder builder = Jwts.builder()
                 .subject(email)
@@ -38,8 +38,8 @@ public class JwtUtil implements TokenPort {
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(now.plusMillis(expirationMs)))
                 .signWith(secretKey);
-        if (consulteeCode != null) {
-            builder.claim("consulteeCode", consulteeCode);
+        if (consulteeId != null) {
+            builder.claim("consulteeId", consulteeId);
         }
         return builder.compact();
     }
@@ -52,8 +52,8 @@ public class JwtUtil implements TokenPort {
         return parseClaims(token).get("role", String.class);
     }
 
-    public String extractConsulteeCode(String token) {
-        return parseClaims(token).get("consulteeCode", String.class);
+    public String extractConsulteeId(String token) {
+        return parseClaims(token).get("consulteeId", String.class);
     }
 
     public boolean isValid(String token) {

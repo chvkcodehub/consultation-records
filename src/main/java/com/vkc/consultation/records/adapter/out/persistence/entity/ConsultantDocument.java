@@ -3,6 +3,8 @@ package com.vkc.consultation.records.adapter.out.persistence.entity;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.vkc.consultation.records.application.domain.model.SpecialityType;
+
 import lombok.Data;
 
 @Data
@@ -10,9 +12,8 @@ import lombok.Data;
 public class ConsultantDocument {
     @Id
     private String id;
-    private String code;
     private String name;
-    private String speciality;
+    private SpecialityType speciality;
     private String qualification;
     private int experienceYears;
     private double fee;

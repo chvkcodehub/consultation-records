@@ -8,11 +8,10 @@ import lombok.Data;
 @Data
 public class Consultation {
     private String id;
-    private String code;
     private ConsultationType type;
     private ConsultationStatus status;
-    private String consultantCode;
-    private String patientCode;
+    private String consultantId;
+    private String patientId;
     private String diagnosis;
     private String prescription;
     private String comments;

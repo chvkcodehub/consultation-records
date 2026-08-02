@@ -5,7 +5,6 @@ import { CONSULTATION_STATUSES, CONSULTATION_TYPES } from "../../types";
 import { formatDateTime, labelize, toDateTimeInputValue } from "../../utils/format";
 
 const fields: FieldConfig[] = [
-  { name: "code", label: "Code", type: "text", required: true },
   {
     name: "type",
     label: "Type",
@@ -20,8 +19,8 @@ const fields: FieldConfig[] = [
     required: true,
     options: CONSULTATION_STATUSES.map((s) => ({ value: s, label: labelize(s) })),
   },
-  { name: "consultantCode", label: "Consultant code", type: "text", required: true },
-  { name: "patientCode", label: "Patient code", type: "text", required: true },
+  { name: "consultantId", label: "Consultant ID", type: "text", required: true },
+  { name: "patientId", label: "Patient ID", type: "text", required: true },
   { name: "consultationDate", label: "Consultation date/time", type: "datetime-local", required: true },
   { name: "followUpDate", label: "Follow-up date/time", type: "datetime-local" },
   { name: "diagnosis", label: "Diagnosis", type: "textarea" },
@@ -38,23 +37,21 @@ export function ConsultationsPage() {
       api={consultationsApi}
       fields={fields}
       columns={[
-        { key: "code", label: "Code" },
         { key: "type", label: "Type", render: (item) => labelize(item.type) },
         {
           key: "status",
           label: "Status",
           render: (item) => <span className={`badge status-${item.status}`}>{labelize(item.status)}</span>,
         },
-        { key: "consultantCode", label: "Consultant" },
-        { key: "patientCode", label: "Patient" },
+        { key: "consultantId", label: "Consultant", render: (item) => item.consultantName ?? item.consultantId },
+        { key: "patientId", label: "Patient", render: (item) => item.patientName ?? item.patientId },
         { key: "consultationDate", label: "When", render: (item) => formatDateTime(item.consultationDate) },
       ]}
       toFormValues={(item) => ({
-        code: item?.code ?? "",
         type: item?.type ?? "",
         status: item?.status ?? "BOOKED",
-        consultantCode: item?.consultantCode ?? "",
-        patientCode: item?.patientCode ?? "",
+        consultantId: item?.consultantId ?? "",
+        patientId: item?.patientId ?? "",
         consultationDate: toDateTimeInputValue(item?.consultationDate ?? null),
         followUpDate: toDateTimeInputValue(item?.followUpDate ?? null),
         diagnosis: item?.diagnosis ?? "",
@@ -64,11 +61,10 @@ export function ConsultationsPage() {
         fee: item?.fee ? String(item.fee) : "",
       })}
       fromFormValues={(values): ConsultationFormInput => ({
-        code: values.code,
         type: values.type as Consultation["type"],
         status: values.status as Consultation["status"],
-        consultantCode: values.consultantCode,
-        patientCode: values.patientCode,
+        consultantId: values.consultantId,
+        patientId: values.patientId,
         consultationDate: values.consultationDate ? new Date(values.consultationDate).toISOString() : null,
         followUpDate: values.followUpDate ? new Date(values.followUpDate).toISOString() : null,
         diagnosis: values.diagnosis || null,

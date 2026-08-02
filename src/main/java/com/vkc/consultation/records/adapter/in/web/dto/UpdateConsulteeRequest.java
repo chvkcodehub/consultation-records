@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Request body for updating an existing consultee (patient)")
 public record UpdateConsulteeRequest(
-        @Schema(description = "Unique business code", example = "PT001") String code,
         @Schema(description = "Full name of the consultee", example = "John Doe") String name,
         @Schema(description = "Gender", example = "Male") String gender,
         @Schema(description = "Date of birth", example = "1990-05-15") Date dob,

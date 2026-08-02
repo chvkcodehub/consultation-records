@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Request body for updating an existing goal")
 public record UpdateGoalRequest(
-        @Schema(description = "Unique business code", example = "GL001") String code,
         @Schema(description = "Name of the goal", example = "Reduce blood pressure") String name,
         @Schema(description = "Detailed description of the goal") String description,
         @Schema(description = "Importance level", example = "High") String importance,

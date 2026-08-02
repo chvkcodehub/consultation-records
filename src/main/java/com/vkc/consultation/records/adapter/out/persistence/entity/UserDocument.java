@@ -19,7 +19,7 @@ public class UserDocument {
 
     private String passwordHash;
     private String role;
-    private String consulteeCode;
+    private String consulteeId;
     private Instant createdAt;
     private String resetToken;
     private Instant resetTokenExpiry;

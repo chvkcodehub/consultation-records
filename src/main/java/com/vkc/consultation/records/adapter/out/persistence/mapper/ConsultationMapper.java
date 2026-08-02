@@ -10,11 +10,10 @@ public class ConsultationMapper {
     public static Consultation toDomain(ConsultationDocument doc) {
         Consultation domain = new Consultation();
         domain.setId(doc.getId());
-        domain.setCode(doc.getCode());
         domain.setType(doc.getType());
         domain.setStatus(doc.getStatus());
-        domain.setConsultantCode(doc.getConsultantCode());
-        domain.setPatientCode(doc.getPatientCode());
+        domain.setConsultantId(doc.getConsultantId());
+        domain.setPatientId(doc.getPatientId());
         domain.setDiagnosis(doc.getDiagnosis());
         domain.setPrescription(doc.getPrescription());
         domain.setComments(doc.getComments());
@@ -29,11 +28,10 @@ public class ConsultationMapper {
     public static ConsultationDocument toDocument(Consultation domain) {
         ConsultationDocument doc = new ConsultationDocument();
         doc.setId(domain.getId());
-        doc.setCode(domain.getCode());
         doc.setType(domain.getType());
         doc.setStatus(domain.getStatus());
-        doc.setConsultantCode(domain.getConsultantCode());
-        doc.setPatientCode(domain.getPatientCode());
+        doc.setConsultantId(domain.getConsultantId());
+        doc.setPatientId(domain.getPatientId());
         doc.setDiagnosis(domain.getDiagnosis());
         doc.setPrescription(domain.getPrescription());
         doc.setComments(domain.getComments());

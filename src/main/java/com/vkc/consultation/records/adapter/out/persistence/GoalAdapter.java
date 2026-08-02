@@ -33,11 +33,6 @@ public class GoalAdapter implements GoalPort {
     }
 
     @Override
-    public Optional<Goal> findByCode(String code) {
-        return goalRepository.findByCode(code).map(GoalMapper::toDomain);
-    }
-
-    @Override
     public Goal save(@NonNull Goal goal) {
         return GoalMapper.toDomain(goalRepository.save(GoalMapper.toDocument(goal)));
     }

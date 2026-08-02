@@ -33,24 +33,24 @@ class ReportServiceTest {
     @Mock
     private ConsultantPort consultantPort;
 
-    private Consultation consultation(String patientCode, String consultantCode, ConsultationType type) {
+    private Consultation consultation(String patientId, String consultantId, ConsultationType type) {
         Consultation c = new Consultation();
-        c.setPatientCode(patientCode);
-        c.setConsultantCode(consultantCode);
+        c.setPatientId(patientId);
+        c.setConsultantId(consultantId);
         c.setType(type);
         return c;
     }
 
-    private Consultee consultee(String code, String name) {
+    private Consultee consultee(String id, String name) {
         Consultee c = new Consultee();
-        c.setCode(code);
+        c.setId(id);
         c.setName(name);
         return c;
     }
 
-    private Consultant consultant(String code, String name) {
+    private Consultant consultant(String id, String name) {
         Consultant c = new Consultant();
-        c.setCode(code);
+        c.setId(id);
         c.setName(name);
         return c;
     }
@@ -70,12 +70,12 @@ class ReportServiceTest {
         assertThat(report.getTotalSessions()).isEqualTo(3);
         assertThat(report.getBreakdown()).hasSize(2);
         assertThat(report.getBreakdown()).anySatisfy(b -> {
-            assertThat(b.getConsulteeCode()).isEqualTo("PT001");
+            assertThat(b.getConsulteeId()).isEqualTo("PT001");
             assertThat(b.getConsulteeName()).isEqualTo("Alice");
             assertThat(b.getSessionCount()).isEqualTo(2);
         });
         assertThat(report.getBreakdown()).anySatisfy(b -> {
-            assertThat(b.getConsulteeCode()).isEqualTo("PT002");
+            assertThat(b.getConsulteeId()).isEqualTo("PT002");
             assertThat(b.getSessionCount()).isEqualTo(1);
         });
     }
@@ -97,7 +97,7 @@ class ReportServiceTest {
         assertThat(report.getTotalSessions()).isEqualTo(4);
 
         ConsultantSummaryBreakdown dr001 = report.getBreakdown().stream()
-                .filter(b -> b.getConsultantCode().equals("DR001"))
+                .filter(b -> b.getConsultantId().equals("DR001"))
                 .findFirst().orElseThrow();
         assertThat(dr001.getConsultantName()).isEqualTo("Dr. Smith");
         assertThat(dr001.getSessionCount()).isEqualTo(3);

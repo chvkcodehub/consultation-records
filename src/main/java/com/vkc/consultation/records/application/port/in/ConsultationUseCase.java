@@ -11,11 +11,9 @@ public interface ConsultationUseCase {
 
     Consultation findConsultationById(@NonNull String id);
 
-    Consultation findConsultationByCode(String code);
+    List<Consultation> findConsultationByConsultant(String consultantId);
 
-    List<Consultation> findConsultationByConsultant(String consultantCode);
-
-    List<Consultation> findConsultationByPatient(String patientCode);
+    List<Consultation> findConsultationByPatient(String patientId);
 
     Consultation createConsultation(@NonNull CreateConsultationCommand command);
 
@@ -25,5 +23,5 @@ public interface ConsultationUseCase {
 
     Consultation bookConsultation(@NonNull BookConsultationCommand command);
 
-    Consultation findConsultationForPatient(@NonNull String id, @NonNull String patientCode);
+    Consultation findConsultationForPatient(@NonNull String id, @NonNull String patientId);
 }

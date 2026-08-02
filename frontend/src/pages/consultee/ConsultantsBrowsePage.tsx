@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { consultantsApi } from "../../api/consultantsApi";
 import { ApiError } from "../../api/client";
 import type { Consultant } from "../../types";
+import { Icon } from "../../components/Icon";
 
 export function ConsultantsBrowsePage() {
   const [consultants, setConsultants] = useState<Consultant[]>([]);
@@ -18,42 +19,50 @@ export function ConsultantsBrowsePage() {
   return (
     <div>
       <div className="page-header">
-        <h2>Consultants</h2>
+        <div>
+          <h2>Consultants</h2>
+          <p className="subtitle">Browse our team and book a consultation.</p>
+        </div>
       </div>
       {error && <p className="error-text">{error}</p>}
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Speciality</th>
-            <th>Qualification</th>
-            <th>Experience</th>
-            <th>Fee</th>
-            <th />
-          </tr>
-        </thead>
-        <tbody>
-          {consultants.map((c) => (
-            <tr key={c.id}>
-              <td>{c.name}</td>
-              <td>{c.speciality}</td>
-              <td>{c.qualification}</td>
-              <td>{c.experienceYears} yrs</td>
-              <td>{c.fee}</td>
-              <td>
-                <Link to={`/consultee/book?consultantCode=${encodeURIComponent(c.code)}`}>
-                  <button className="primary">Book</button>
-                </Link>
-              </td>
-            </tr>
-          ))}
-          {consultants.length === 0 && (
+      <div className="table-scroll">
+        <table>
+          <thead>
             <tr>
-              <td colSpan={6}>No consultants available.</td>
+              <th>Name</th>
+              <th>Speciality</th>
+              <th>Qualification</th>
+              <th>Experience</th>
+              <th>Fee</th>
+              <th />
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {consultants.map((c) => (
+              <tr key={c.id}>
+                <td>{c.name}</td>
+                <td>{c.speciality}</td>
+                <td>{c.qualification}</td>
+                <td>{c.experienceYears} yrs</td>
+                <td>{c.fee}</td>
+                <td>
+                  <Link to={`/consultee/book?consultantId=${encodeURIComponent(c.id)}`}>
+                    <button className="primary icon-btn">
+                      <Icon name="book" size={15} />
+                      Book
+                    </button>
+                  </Link>
+                </td>
+              </tr>
+            ))}
+            {consultants.length === 0 && (
+              <tr>
+                <td colSpan={6}>No consultants available.</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

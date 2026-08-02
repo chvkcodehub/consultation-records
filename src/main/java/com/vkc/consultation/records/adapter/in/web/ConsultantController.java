@@ -67,20 +67,6 @@ public class ConsultantController {
         return ConsultantResponse.from(consultantUseCase.findConsultantById(id));
     }
 
-    @GetMapping("/code/{code}")
-    @ResponseBody
-    @Operation(summary = "Find consultant by business code", description = "Returns a single consultant by their unique business code.")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Consultant found",
-                content = @Content(schema = @Schema(implementation = ConsultantResponse.class))),
-        @ApiResponse(responseCode = "404", description = "Consultant not found", content = @Content)
-    })
-    public ConsultantResponse findConsultantByCode(
-            @Parameter(description = "Business code of the consultant", required = true)
-            @PathVariable String code) {
-        return ConsultantResponse.from(consultantUseCase.findConsultantByCode(code));
-    }
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -95,7 +81,7 @@ public class ConsultantController {
                     description = "Consultant details to create", required = true)
             @RequestBody CreateConsultantRequest request) {
         CreateConsultantCommand command = new CreateConsultantCommand(
-                request.code(), request.name(), request.speciality(),
+                request.name(), request.speciality(),
                 request.qualification(), request.experienceYears(), request.fee());
         return ConsultantResponse.from(consultantUseCase.createConsultant(command));
     }
@@ -116,7 +102,7 @@ public class ConsultantController {
                     description = "Updated consultant details", required = true)
             @RequestBody UpdateConsultantRequest request) {
         UpdateConsultantCommand command = new UpdateConsultantCommand(
-                request.code(), request.name(), request.speciality(),
+                request.name(), request.speciality(),
                 request.qualification(), request.experienceYears(), request.fee());
         return ConsultantResponse.from(consultantUseCase.updateConsultant(id, command));
     }

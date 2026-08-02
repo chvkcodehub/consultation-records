@@ -2,7 +2,7 @@ import { apiClient } from "./client";
 import type { Consultation, ConsultationType, Consultee } from "../types";
 
 export interface BookConsultationInput {
-  consultantCode: string;
+  consultantId: string;
   type: ConsultationType;
   consultationDate: string;
   comments?: string;

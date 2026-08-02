@@ -35,15 +35,8 @@ public class GoalService implements GoalUseCase {
     }
 
     @Override
-    public Goal findGoalByCode(String code) {
-        return goalPort.findByCode(code)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Goal not found with code: " + code));
-    }
-
-    @Override
     public Goal createGoal(@NonNull CreateGoalCommand command) {
         Goal goal = new Goal();
-        goal.setCode(command.code());
         goal.setName(command.name());
         goal.setDescription(command.description());
         goal.setImportance(command.importance());
@@ -65,7 +58,6 @@ public class GoalService implements GoalUseCase {
         }
         Goal goal = new Goal();
         goal.setId(id);
-        goal.setCode(command.code());
         goal.setName(command.name());
         goal.setDescription(command.description());
         goal.setImportance(command.importance());

@@ -6,12 +6,13 @@ import { ApiError } from "../../api/client";
 import type { Consultant, ConsultationType } from "../../types";
 import { CONSULTATION_TYPES } from "../../types";
 import { labelize } from "../../utils/format";
+import { Icon } from "../../components/Icon";
 
 export function BookConsultationPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [consultants, setConsultants] = useState<Consultant[]>([]);
-  const [consultantCode, setConsultantCode] = useState(searchParams.get("consultantCode") ?? "");
+  const [consultantId, setConsultantId] = useState(searchParams.get("consultantId") ?? "");
   const [type, setType] = useState<ConsultationType>("INITIAL_CONSULTATION");
   const [consultationDate, setConsultationDate] = useState("");
   const [comments, setComments] = useState("");
@@ -28,7 +29,7 @@ export function BookConsultationPage() {
     setError(null);
     try {
       const created = await portalApi.book({
-        consultantCode,
+        consultantId,
         type,
         consultationDate: new Date(consultationDate).toISOString(),
         comments: comments || undefined,
@@ -44,18 +45,21 @@ export function BookConsultationPage() {
   return (
     <div>
       <div className="page-header">
-        <h2>Book a Consultation</h2>
+        <div>
+          <h2>Book a Consultation</h2>
+          <p className="subtitle">Pick a consultant and a time that works for you.</p>
+        </div>
       </div>
       <form className="card" onSubmit={handleSubmit} style={{ maxWidth: 480 }}>
         <div className="form-grid">
           <label className="form-field">
             Consultant
-            <select value={consultantCode} onChange={(e) => setConsultantCode(e.target.value)} required>
+            <select value={consultantId} onChange={(e) => setConsultantId(e.target.value)} required>
               <option value="" disabled>
                 Select a consultant...
               </option>
               {consultants.map((c) => (
-                <option key={c.code} value={c.code}>
+                <option key={c.id} value={c.id}>
                   {c.name} ({c.speciality})
                 </option>
               ))}
@@ -88,6 +92,7 @@ export function BookConsultationPage() {
         {error && <p className="error-text">{error}</p>}
         <div className="form-actions">
           <button className="primary" type="submit" disabled={submitting}>
+            <Icon name="book" size={16} />
             Book consultation
           </button>
         </div>

@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { authApi } from "../../api/authApi";
 import { ApiError } from "../../api/client";
 import { useAuth } from "../../auth/useAuth";
+import { AuthShell } from "../../components/AuthShell";
+import { Icon } from "../../components/Icon";
 
 export function ConsulteeLoginPage() {
   const { login } = useAuth();
@@ -32,30 +34,35 @@ export function ConsulteeLoginPage() {
   };
 
   return (
-    <div className="auth-page">
-      <form className="auth-card" onSubmit={handleSubmit}>
-        <h1>Consultee sign in</h1>
+    <AuthShell title="Consultee sign in" subtitle="Book and manage your consultations.">
+      <form onSubmit={handleSubmit}>
         <div className="form-field">
           <label>Email</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <div className="field-icon">
+            <Icon name="mail" size={16} />
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          </div>
         </div>
         <div className="form-field" style={{ marginTop: "0.75rem" }}>
           <label>Password</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <div className="field-icon">
+            <Icon name="lock" size={16} />
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          </div>
         </div>
         {error && <p className="error-text">{error}</p>}
         <div className="form-actions">
-          <button className="primary" type="submit" disabled={submitting}>
+          <button className="primary" type="submit" disabled={submitting} style={{ width: "100%", justifyContent: "center" }}>
             Sign in
           </button>
         </div>
-        <p className="auth-links">
-          New here? <Link to="/consultee/register">Create an account</Link>
-        </p>
-        <p className="auth-links">
-          Are you an administrator? <Link to="/admin/login">Sign in here</Link>
-        </p>
       </form>
-    </div>
+      <p className="auth-links">
+        New here? <Link to="/consultee/register">Create an account</Link>
+      </p>
+      <p className="auth-links">
+        Are you an administrator? <Link to="/admin/login">Sign in here</Link>
+      </p>
+    </AuthShell>
   );
 }

@@ -6,14 +6,14 @@ import java.util.stream.Collectors;
 import com.vkc.consultation.records.application.domain.model.ConsultantSummaryBreakdown;
 
 public record ConsultantSummaryBreakdownDto(
-        String consultantCode,
+        String consultantId,
         String consultantName,
         long sessionCount,
         List<ConsultationTypeCountDto> byType) {
 
     public static ConsultantSummaryBreakdownDto from(ConsultantSummaryBreakdown b) {
         return new ConsultantSummaryBreakdownDto(
-                b.getConsultantCode(),
+                b.getConsultantId(),
                 b.getConsultantName(),
                 b.getSessionCount(),
                 b.getByType().stream()

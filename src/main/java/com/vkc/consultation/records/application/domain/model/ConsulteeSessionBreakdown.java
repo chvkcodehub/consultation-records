@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class ConsulteeSessionBreakdown {
-    private String consulteeCode;
+    private String consulteeId;
     private String consulteeName;
     private long sessionCount;
 }

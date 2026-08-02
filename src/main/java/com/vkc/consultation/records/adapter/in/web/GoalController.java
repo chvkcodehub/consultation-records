@@ -67,20 +67,6 @@ public class GoalController {
         return GoalResponse.from(goalUseCase.findGoalById(id));
     }
 
-    @GetMapping("/code/{code}")
-    @ResponseBody
-    @Operation(summary = "Find goal by business code", description = "Returns a single goal by its unique business code.")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Goal found",
-                content = @Content(schema = @Schema(implementation = GoalResponse.class))),
-        @ApiResponse(responseCode = "404", description = "Goal not found", content = @Content)
-    })
-    public GoalResponse findGoalByCode(
-            @Parameter(description = "Business code of the goal", required = true)
-            @PathVariable String code) {
-        return GoalResponse.from(goalUseCase.findGoalByCode(code));
-    }
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -95,7 +81,7 @@ public class GoalController {
                     description = "Goal details to create", required = true)
             @RequestBody CreateGoalRequest request) {
         CreateGoalCommand command = new CreateGoalCommand(
-                request.code(), request.name(), request.description(),
+                request.name(), request.description(),
                 request.importance(), request.difficulty(),
                 request.achievingAgeYears(), request.achievingAgeMonths(),
                 request.remarks(), request.periodInMonths(),
@@ -119,7 +105,7 @@ public class GoalController {
                     description = "Updated goal details", required = true)
             @RequestBody UpdateGoalRequest request) {
         UpdateGoalCommand command = new UpdateGoalCommand(
-                request.code(), request.name(), request.description(),
+                request.name(), request.description(),
                 request.importance(), request.difficulty(),
                 request.achievingAgeYears(), request.achievingAgeMonths(),
                 request.remarks(), request.periodInMonths(),

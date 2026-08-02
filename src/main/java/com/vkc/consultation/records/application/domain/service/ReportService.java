@@ -36,17 +36,18 @@ public class ReportService implements ReportUseCase {
     @Override
     public ConsulteeSessionsReport getConsulteeSessionsReport() {
         List<Consultation> consultations = consultationPort.findConsultations();
-        Map<String, String> consulteeNamesByCode = consulteePort.findAll().stream()
-                .collect(Collectors.toMap(Consultee::getCode, Consultee::getName, (a, b) -> a));
+        Map<String, String> consulteeNamesById = consulteePort.findAll().stream()
+                .collect(Collectors.toMap(Consultee::getId, Consultee::getName, (a, b) -> a));
 
         Map<String, Long> sessionsByPatient = consultations.stream()
-                .collect(Collectors.groupingBy(Consultation::getPatientCode, Collectors.counting()));
+                .filter(c -> c.getPatientId() != null)
+                .collect(Collectors.groupingBy(Consultation::getPatientId, Collectors.counting()));
 
         List<ConsulteeSessionBreakdown> breakdown = sessionsByPatient.entrySet().stream()
                 .map(entry -> {
                     ConsulteeSessionBreakdown item = new ConsulteeSessionBreakdown();
-                    item.setConsulteeCode(entry.getKey());
-                    item.setConsulteeName(consulteeNamesByCode.get(entry.getKey()));
+                    item.setConsulteeId(entry.getKey());
+                    item.setConsulteeName(consulteeNamesById.get(entry.getKey()));
                     item.setSessionCount(entry.getValue());
                     return item;
                 })
@@ -62,17 +63,18 @@ public class ReportService implements ReportUseCase {
     public ConsultantSummaryReport getConsultantSummaryReport() {
         List<Consultation> consultations = consultationPort.findConsultations();
         List<Consultant> consultants = consultantPort.findAll();
-        Map<String, String> consultantNamesByCode = consultants.stream()
-                .collect(Collectors.toMap(Consultant::getCode, Consultant::getName, (a, b) -> a));
+        Map<String, String> consultantNamesById = consultants.stream()
+                .collect(Collectors.toMap(Consultant::getId, Consultant::getName, (a, b) -> a));
 
         Map<String, List<Consultation>> consultationsByConsultant = consultations.stream()
-                .collect(Collectors.groupingBy(Consultation::getConsultantCode));
+                .filter(c -> c.getConsultantId() != null)
+                .collect(Collectors.groupingBy(Consultation::getConsultantId));
 
         List<ConsultantSummaryBreakdown> breakdown = consultationsByConsultant.entrySet().stream()
                 .map(entry -> {
                     ConsultantSummaryBreakdown item = new ConsultantSummaryBreakdown();
-                    item.setConsultantCode(entry.getKey());
-                    item.setConsultantName(consultantNamesByCode.get(entry.getKey()));
+                    item.setConsultantId(entry.getKey());
+                    item.setConsultantName(consultantNamesById.get(entry.getKey()));
                     item.setSessionCount(entry.getValue().size());
                     item.setByType(entry.getValue().stream()
                             .collect(Collectors.groupingBy(Consultation::getType, Collectors.counting()))

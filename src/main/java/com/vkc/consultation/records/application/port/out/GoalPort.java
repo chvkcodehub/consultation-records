@@ -10,7 +10,6 @@ import com.vkc.consultation.records.application.domain.model.Goal;
 public interface GoalPort {
     List<Goal> findAll();
     Optional<Goal> findById(@NonNull String id);
-    Optional<Goal> findByCode(String code);
     Goal save(@NonNull Goal goal);
     boolean existsById(@NonNull String id);
     void deleteById(@NonNull String id);

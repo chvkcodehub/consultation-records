@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { authApi } from "../../api/authApi";
 import { ApiError } from "../../api/client";
 import { useAuth } from "../../auth/useAuth";
+import { AuthShell } from "../../components/AuthShell";
+import { Icon } from "../../components/Icon";
 
 export function AdminRegisterPage() {
   const { login } = useAuth();
@@ -28,27 +30,32 @@ export function AdminRegisterPage() {
   };
 
   return (
-    <div className="auth-page">
-      <form className="auth-card" onSubmit={handleSubmit}>
-        <h1>Create admin account</h1>
+    <AuthShell title="Create admin account" subtitle="Set up an administrator login.">
+      <form onSubmit={handleSubmit}>
         <div className="form-field">
           <label>Email</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <div className="field-icon">
+            <Icon name="mail" size={16} />
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          </div>
         </div>
         <div className="form-field" style={{ marginTop: "0.75rem" }}>
           <label>Password</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <div className="field-icon">
+            <Icon name="lock" size={16} />
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          </div>
         </div>
         {error && <p className="error-text">{error}</p>}
         <div className="form-actions">
-          <button className="primary" type="submit" disabled={submitting}>
+          <button className="primary" type="submit" disabled={submitting} style={{ width: "100%", justifyContent: "center" }}>
             Create account
           </button>
         </div>
-        <p className="auth-links">
-          Already have an account? <Link to="/admin/login">Sign in</Link>
-        </p>
       </form>
-    </div>
+      <p className="auth-links">
+        Already have an account? <Link to="/admin/login">Sign in</Link>
+      </p>
+    </AuthShell>
   );
 }

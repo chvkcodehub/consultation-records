@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import com.vkc.consultation.records.application.port.out.TokenPort;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
@@ -28,18 +29,31 @@ public class JwtUtil implements TokenPort {
         this.expirationMs = expirationMs;
     }
 
-    public String generateToken(String email) {
+    @Override
+    public String generateToken(String email, String role, String consulteeId) {
         Instant now = Instant.now();
-        return Jwts.builder()
+        JwtBuilder builder = Jwts.builder()
                 .subject(email)
+                .claim("role", role)
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(now.plusMillis(expirationMs)))
-                .signWith(secretKey)
-                .compact();
+                .signWith(secretKey);
+        if (consulteeId != null) {
+            builder.claim("consulteeId", consulteeId);
+        }
+        return builder.compact();
     }
 
     public String extractEmail(String token) {
         return parseClaims(token).getSubject();
+    }
+
+    public String extractRole(String token) {
+        return parseClaims(token).get("role", String.class);
+    }
+
+    public String extractConsulteeId(String token) {
+        return parseClaims(token).get("consulteeId", String.class);
     }
 
     public boolean isValid(String token) {

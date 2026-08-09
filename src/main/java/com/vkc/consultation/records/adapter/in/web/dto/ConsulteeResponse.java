@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "Consultee details returned by the API")
 public record ConsulteeResponse(
         @Schema(description = "MongoDB document ID", example = "6624a1f3e2b4c30012d4f902") String id,
-        @Schema(description = "Unique business code", example = "PT001") String code,
         @Schema(description = "Full name of the consultee", example = "John Doe") String name,
         @Schema(description = "Gender", example = "Male") String gender,
         @Schema(description = "Date of birth") Date dob,
@@ -24,7 +23,6 @@ public record ConsulteeResponse(
     public static ConsulteeResponse from(Consultee c) {
         return new ConsulteeResponse(
                 c.getId(),
-                c.getCode(),
                 c.getName(),
                 c.getGender(),
                 c.getDob(),                

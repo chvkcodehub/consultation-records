@@ -8,10 +8,8 @@ import org.springframework.data.mongodb.repository.Query;
 import com.vkc.consultation.records.adapter.out.persistence.entity.ConsultationDocument;
 
 public interface ConsultationRepository extends MongoRepository<ConsultationDocument, String> {
-    @Query("{code : ?0}")
-    ConsultationDocument findConsultationByCode(String code);
-    @Query("{consultantCode : ?0}")
-    List<ConsultationDocument> findConsultationsByConsultant(String consultantCode);
-    @Query("{patientCode : ?0}")
-    List<ConsultationDocument> findConsultationsByPatient(String patientCode);
+    @Query("{consultantId : ?0}")
+    List<ConsultationDocument> findConsultationsByConsultant(String consultantId);
+    @Query("{consulteeId : ?0}")
+    List<ConsultationDocument> findConsultationsByConsultee(String consulteeId);
 }

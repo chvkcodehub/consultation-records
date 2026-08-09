@@ -33,11 +33,6 @@ public class ConsultantAdapter implements ConsultantPort {
     }
 
     @Override
-    public Optional<Consultant> findByCode(String code) {
-        return consultantRepository.findByCode(code).map(ConsultantMapper::toDomain);
-    }
-
-    @Override
     public Consultant save(@NonNull Consultant consultant) {
         return ConsultantMapper.toDomain(
                 consultantRepository.save(ConsultantMapper.toDocument(consultant)));

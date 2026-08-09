@@ -7,7 +7,6 @@ import lombok.Data;
 @Data
 public class Consultee {
     private String id;
-    private String code;
     private String name;
     private String gender;
     private Date dob;

@@ -1,9 +1,10 @@
 package com.vkc.consultation.records.application.port.in;
 
+import com.vkc.consultation.records.application.domain.model.SpecialityType;
+
 public record CreateConsultantCommand(
-        String code,
         String name,
-        String speciality,
+        SpecialityType speciality,
         String qualification,
         int experienceYears,
         double fee) {}

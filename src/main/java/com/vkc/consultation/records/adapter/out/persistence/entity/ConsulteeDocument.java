@@ -12,7 +12,6 @@ import lombok.Data;
 public class ConsulteeDocument {
     @Id
     private String id;
-    private String code;
     private String name;
     private String gender;
     private Date dob;

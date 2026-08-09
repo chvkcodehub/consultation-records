@@ -1,10 +1,11 @@
 package com.vkc.consultation.records.security;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.List;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -33,8 +34,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String token = authHeader.substring(7);
             if (jwtUtil.isValid(token) && SecurityContextHolder.getContext().getAuthentication() == null) {
                 String email = jwtUtil.extractEmail(token);
+                String role = jwtUtil.extractRole(token);
+                String consulteeId = jwtUtil.extractConsulteeId(token);
+                AuthenticatedUser principal = new AuthenticatedUser(email, role, consulteeId);
+                List<SimpleGrantedAuthority> authorities = role != null
+                        ? List.of(new SimpleGrantedAuthority("ROLE_" + role))
+                        : List.of();
                 UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(email, null, Collections.emptyList());
+                        new UsernamePasswordAuthenticationToken(principal, null, authorities);
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }

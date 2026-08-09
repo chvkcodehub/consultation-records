@@ -33,8 +33,8 @@ public class ConsulteeAdapter implements ConsulteePort {
     }
 
     @Override
-    public Optional<Consultee> findByCode(String code) {
-        return consulteeRepository.findByCode(code).map(ConsulteeMapper::toDomain);
+    public Optional<Consultee> findByEmail(String email) {
+        return consulteeRepository.findByEmail(email).map(ConsulteeMapper::toDomain);
     }
 
     @Override

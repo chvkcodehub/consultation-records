@@ -3,11 +3,14 @@ package com.vkc.consultation.records.application.port.in;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.vkc.consultation.records.application.domain.model.ConsultationStatus;
+import com.vkc.consultation.records.application.domain.model.ConsultationType;
+
 public record UpdateConsultationCommand(
-        String code,
-        String type,
-        String consultantCode,
-        String patientCode,
+        ConsultationType type,
+        ConsultationStatus status,
+        String consultantId,
+        String consulteeId,
         String diagnosis,
         String prescription,
         String comments,

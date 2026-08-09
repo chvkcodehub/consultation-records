@@ -10,7 +10,6 @@ public class ConsulteeMapper {
     public static Consultee toDomain(ConsulteeDocument doc) {
         Consultee consultee = new Consultee();
         consultee.setId(doc.getId());
-        consultee.setCode(doc.getCode());
         consultee.setName(doc.getName());
         consultee.setGender(doc.getGender());
         consultee.setDob(doc.getDob());
@@ -26,7 +25,6 @@ public class ConsulteeMapper {
     public static ConsulteeDocument toDocument(Consultee consultee) {
         ConsulteeDocument doc = new ConsulteeDocument();
         doc.setId(consultee.getId());
-        doc.setCode(consultee.getCode());
         doc.setName(consultee.getName());
         doc.setGender(consultee.getGender());
         doc.setDob(consultee.getDob());

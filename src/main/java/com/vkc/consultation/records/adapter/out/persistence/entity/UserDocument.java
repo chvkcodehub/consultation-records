@@ -1,7 +1,6 @@
 package com.vkc.consultation.records.adapter.out.persistence.entity;
 
 import java.time.Instant;
-import java.util.Set;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -19,7 +18,8 @@ public class UserDocument {
     private String email;
 
     private String passwordHash;
-    private Set<String> roles;
+    private String role;
+    private String consulteeId;
     private Instant createdAt;
     private String resetToken;
     private Instant resetTokenExpiry;

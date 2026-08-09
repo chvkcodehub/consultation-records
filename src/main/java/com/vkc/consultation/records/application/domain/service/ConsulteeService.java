@@ -34,15 +34,8 @@ public class ConsulteeService implements ConsulteeUseCase {
     }
 
     @Override
-    public Consultee findConsulteeByCode(String code) {
-        return consulteePort.findByCode(code)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Consultee not found with code: " + code));
-    }
-
-    @Override
     public Consultee createConsultee(@NonNull CreateConsulteeCommand command) {
         Consultee consultee = new Consultee();
-        consultee.setCode(command.code());
         consultee.setName(command.name());
         consultee.setGender(command.gender());
         consultee.setDob(command.dob());
@@ -61,7 +54,6 @@ public class ConsulteeService implements ConsulteeUseCase {
         }
         Consultee consultee = new Consultee();
         consultee.setId(id);
-        consultee.setCode(command.code());
         consultee.setName(command.name());
         consultee.setGender(command.gender());
         consultee.setDob(command.dob());

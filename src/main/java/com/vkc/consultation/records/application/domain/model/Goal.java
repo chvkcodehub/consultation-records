@@ -1,11 +1,12 @@
 package com.vkc.consultation.records.application.domain.model;
 
+import java.util.Date;
+
 import lombok.Data;
 
 @Data
-public class Goals {
+public class Goal {
     private String id;
-    private String code;
     private String name;
     private String description;
     private String importance;
@@ -14,7 +15,7 @@ public class Goals {
     private int achievingAgeMonths;
     private String remarks;
     private int periodInMonths;
-    private String createdDate;
-    private String updatedDate;
-    private int status;
+    private Date createdDate;
+    private Date updatedDate;
+    private String status;
 }

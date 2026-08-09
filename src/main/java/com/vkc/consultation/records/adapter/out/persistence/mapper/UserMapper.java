@@ -1,6 +1,7 @@
 package com.vkc.consultation.records.adapter.out.persistence.mapper;
 
 import com.vkc.consultation.records.adapter.out.persistence.entity.UserDocument;
+import com.vkc.consultation.records.application.domain.model.Role;
 import com.vkc.consultation.records.application.domain.model.User;
 
 public class UserMapper {
@@ -12,7 +13,8 @@ public class UserMapper {
         user.setId(doc.getId());
         user.setEmail(doc.getEmail());
         user.setPasswordHash(doc.getPasswordHash());
-        user.setRoles(doc.getRoles());
+        user.setRole(doc.getRole() != null ? Role.valueOf(doc.getRole()) : null);
+        user.setConsulteeId(doc.getConsulteeId());
         user.setCreatedAt(doc.getCreatedAt());
         user.setResetToken(doc.getResetToken());
         user.setResetTokenExpiry(doc.getResetTokenExpiry());
@@ -24,7 +26,8 @@ public class UserMapper {
         doc.setId(user.getId());
         doc.setEmail(user.getEmail());
         doc.setPasswordHash(user.getPasswordHash());
-        doc.setRoles(user.getRoles());
+        doc.setRole(user.getRole() != null ? user.getRole().name() : null);
+        doc.setConsulteeId(user.getConsulteeId());
         doc.setCreatedAt(user.getCreatedAt());
         doc.setResetToken(user.getResetToken());
         doc.setResetTokenExpiry(user.getResetTokenExpiry());

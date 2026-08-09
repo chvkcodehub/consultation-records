@@ -11,15 +11,17 @@ public interface ConsultationUseCase {
 
     Consultation findConsultationById(@NonNull String id);
 
-    Consultation findConsultationByCode(String code);
+    List<Consultation> findConsultationByConsultant(String consultantId);
 
-    List<Consultation> findConsultationByConsultant(String consultantCode);
-
-    List<Consultation> findConsultationByPatient(String patientCode);
+    List<Consultation> findConsultationByConsultee(String consulteeId);
 
     Consultation createConsultation(@NonNull CreateConsultationCommand command);
 
     Consultation updateConsultation(@NonNull String id, @NonNull UpdateConsultationCommand command);
 
     void deleteConsultation(@NonNull String id);
+
+    Consultation bookConsultation(@NonNull BookConsultationCommand command);
+
+    Consultation findConsultationForPatient(@NonNull String id, @NonNull String patientId);
 }

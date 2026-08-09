@@ -10,9 +10,8 @@ public interface ConsultationPort {
     List<Consultation> findConsultations();
     Consultation findConsultationById(@NonNull String id);
 
-    Consultation findConsultationByCode(String code);
-    List<Consultation> findConsultationsByConsultant(String consultantCode);
-    List<Consultation> findConsultationsByPatient(String patientCode);
+    List<Consultation> findConsultationsByConsultant(String consultantId);
+    List<Consultation> findConsultationsByConsultee(String consulteeId);
     Consultation saveConsultation(@NonNull Consultation consultation);
     boolean existsById(@NonNull String id);
     void deleteById(@NonNull String id);

@@ -34,15 +34,8 @@ public class ConsultantService implements ConsultantUseCase {
     }
 
     @Override
-    public Consultant findConsultantByCode(String code) {
-        return consultantPort.findByCode(code)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Consultant not found with code: " + code));
-    }
-
-    @Override
     public Consultant createConsultant(@NonNull CreateConsultantCommand command) {
         Consultant consultant = new Consultant();
-        consultant.setCode(command.code());
         consultant.setName(command.name());
         consultant.setSpeciality(command.speciality());
         consultant.setQualification(command.qualification());
@@ -58,7 +51,6 @@ public class ConsultantService implements ConsultantUseCase {
         }
         Consultant consultant = new Consultant();
         consultant.setId(id);
-        consultant.setCode(command.code());
         consultant.setName(command.name());
         consultant.setSpeciality(command.speciality());
         consultant.setQualification(command.qualification());

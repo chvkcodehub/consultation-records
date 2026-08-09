@@ -10,7 +10,6 @@ import com.vkc.consultation.records.application.domain.model.Consultant;
 public interface ConsultantPort {
     List<Consultant> findAll();
     Optional<Consultant> findById(@NonNull String id);
-    Optional<Consultant> findByCode(String code);
     Consultant save(@NonNull Consultant consultant);
     boolean existsById(@NonNull String id);
     void deleteById(@NonNull String id);

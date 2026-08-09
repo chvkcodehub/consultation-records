@@ -10,7 +10,6 @@ public class ConsultantMapper {
     public static Consultant toDomain(ConsultantDocument doc) {
         Consultant consultant = new Consultant();
         consultant.setId(doc.getId());
-        consultant.setCode(doc.getCode());
         consultant.setName(doc.getName());
         consultant.setSpeciality(doc.getSpeciality());
         consultant.setQualification(doc.getQualification());
@@ -22,7 +21,6 @@ public class ConsultantMapper {
     public static ConsultantDocument toDocument(Consultant consultant) {
         ConsultantDocument doc = new ConsultantDocument();
         doc.setId(consultant.getId());
-        doc.setCode(consultant.getCode());
         doc.setName(consultant.getName());
         doc.setSpeciality(consultant.getSpeciality());
         doc.setQualification(consultant.getQualification());

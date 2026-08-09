@@ -19,7 +19,7 @@ public class ConsultationDocument {
     private ConsultationType type;
     private ConsultationStatus status;
     private String consultantId;
-    private String patientId;
+    private String consulteeId;
     private String diagnosis;
     private String prescription;
     private String comments;

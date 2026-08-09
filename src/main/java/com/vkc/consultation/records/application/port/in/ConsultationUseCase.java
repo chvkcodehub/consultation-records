@@ -13,7 +13,7 @@ public interface ConsultationUseCase {
 
     List<Consultation> findConsultationByConsultant(String consultantId);
 
-    List<Consultation> findConsultationByPatient(String patientId);
+    List<Consultation> findConsultationByConsultee(String consulteeId);
 
     Consultation createConsultation(@NonNull CreateConsultationCommand command);
 

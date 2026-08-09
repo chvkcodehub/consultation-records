@@ -14,8 +14,8 @@ public record ConsultationResponse(
         ConsultationStatus status,
         String consultantId,
         String consultantName,
-        String patientId,
-        String patientName,
+        String consulteeId,
+        String consulteeName,
         String diagnosis,
         String prescription,
         String comments,
@@ -26,15 +26,15 @@ public record ConsultationResponse(
         BigDecimal fee) {
 
     public static ConsultationResponse from(Consultation c, Map<String, String> consultantNamesById,
-            Map<String, String> patientNamesById) {
+            Map<String, String> consulteeNamesById) {
         return new ConsultationResponse(
                 c.getId(),
                 c.getType(),
                 c.getStatus(),
                 c.getConsultantId(),
                 consultantNamesById.get(c.getConsultantId()),
-                c.getPatientId(),
-                patientNamesById.get(c.getPatientId()),
+                c.getConsulteeId(),
+                consulteeNamesById.get(c.getConsulteeId()),
                 c.getDiagnosis(),
                 c.getPrescription(),
                 c.getComments(),

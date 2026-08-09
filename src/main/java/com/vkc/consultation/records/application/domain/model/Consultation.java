@@ -11,7 +11,7 @@ public class Consultation {
     private ConsultationType type;
     private ConsultationStatus status;
     private String consultantId;
-    private String patientId;
+    private String consulteeId;
     private String diagnosis;
     private String prescription;
     private String comments;

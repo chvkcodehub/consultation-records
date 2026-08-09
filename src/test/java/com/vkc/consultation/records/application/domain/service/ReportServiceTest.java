@@ -35,7 +35,7 @@ class ReportServiceTest {
 
     private Consultation consultation(String patientId, String consultantId, ConsultationType type) {
         Consultation c = new Consultation();
-        c.setPatientId(patientId);
+        c.setConsulteeId(patientId);
         c.setConsultantId(consultantId);
         c.setType(type);
         return c;

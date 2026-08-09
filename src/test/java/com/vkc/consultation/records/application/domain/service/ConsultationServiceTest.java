@@ -46,7 +46,7 @@ class ConsultationServiceTest {
         Consultation result = service.bookConsultation(command);
 
         assertThat(result.getStatus()).isEqualTo(ConsultationStatus.BOOKED);
-        assertThat(result.getPatientId()).isEqualTo("PT001");
+        assertThat(result.getConsulteeId()).isEqualTo("PT001");
         assertThat(result.getConsultantId()).isEqualTo("DR001");
         assertThat(result.getFee()).isEqualByComparingTo("150.0");
     }
@@ -68,7 +68,7 @@ class ConsultationServiceTest {
     void findConsultationForPatient_returnsRecordWhenOwnedByPatient() {
         Consultation consultation = new Consultation();
         consultation.setId("abc123");
-        consultation.setPatientId("PT001");
+        consultation.setConsulteeId("PT001");
         when(consultationPort.findConsultationById("abc123")).thenReturn(consultation);
 
         ConsultationService service = new ConsultationService(consultationPort, consultantPort);
@@ -80,7 +80,7 @@ class ConsultationServiceTest {
     void findConsultationForPatient_throwsForbiddenWhenNotOwner() {
         Consultation consultation = new Consultation();
         consultation.setId("abc123");
-        consultation.setPatientId("PT001");
+        consultation.setConsulteeId("PT001");
         when(consultationPort.findConsultationById("abc123")).thenReturn(consultation);
 
         ConsultationService service = new ConsultationService(consultationPort, consultantPort);

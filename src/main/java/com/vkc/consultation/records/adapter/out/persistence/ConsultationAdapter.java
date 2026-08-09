@@ -41,8 +41,8 @@ public class ConsultationAdapter implements ConsultationPort {
     }
 
     @Override
-    public List<Consultation> findConsultationsByPatient(String patientId) {
-        return consultationRepository.findConsultationsByPatient(patientId).stream()
+    public List<Consultation> findConsultationsByConsultee(String consulteeId) {
+        return consultationRepository.findConsultationsByConsultee(consulteeId).stream()
                 .map(ConsultationMapper::toDomain)
                 .collect(Collectors.toList());
     }

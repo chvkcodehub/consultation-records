@@ -46,8 +46,8 @@ public class ConsultationService implements ConsultationUseCase {
     }
 
     @Override
-    public List<Consultation> findConsultationByPatient(String patientId) {
-        return consultationPort.findConsultationsByPatient(patientId);
+    public List<Consultation> findConsultationByConsultee(String consulteeId) {
+        return consultationPort.findConsultationsByConsultee(consulteeId);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class ConsultationService implements ConsultationUseCase {
         consultation.setType(command.type());
         consultation.setStatus(command.status() != null ? command.status() : ConsultationStatus.BOOKED);
         consultation.setConsultantId(command.consultantId());
-        consultation.setPatientId(command.patientId());
+        consultation.setConsulteeId(command.consulteeId());
         consultation.setDiagnosis(command.diagnosis());
         consultation.setPrescription(command.prescription());
         consultation.setComments(command.comments());
@@ -78,7 +78,7 @@ public class ConsultationService implements ConsultationUseCase {
         consultation.setType(command.type());
         consultation.setStatus(command.status());
         consultation.setConsultantId(command.consultantId());
-        consultation.setPatientId(command.patientId());
+        consultation.setConsulteeId(command.consulteeId());
         consultation.setDiagnosis(command.diagnosis());
         consultation.setPrescription(command.prescription());
         consultation.setComments(command.comments());
@@ -108,7 +108,7 @@ public class ConsultationService implements ConsultationUseCase {
         consultation.setType(command.type());
         consultation.setStatus(ConsultationStatus.BOOKED);
         consultation.setConsultantId(command.consultantId());
-        consultation.setPatientId(command.patientId());
+        consultation.setConsulteeId(command.consulteeId());
         consultation.setComments(command.comments());
         consultation.setConsultationDate(command.consultationDate());
         consultation.setFee(BigDecimal.valueOf(consultant.getFee()));
@@ -119,7 +119,7 @@ public class ConsultationService implements ConsultationUseCase {
     @Override
     public Consultation findConsultationForPatient(@NonNull String id, @NonNull String patientId) {
         Consultation consultation = consultationPort.findConsultationById(id);
-        if (!patientId.equals(consultation.getPatientId())) {
+        if (!patientId.equals(consultation.getConsulteeId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not authorized to view this consultation");
         }
         return consultation;

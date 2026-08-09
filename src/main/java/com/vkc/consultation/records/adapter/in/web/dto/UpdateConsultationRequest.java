@@ -10,7 +10,7 @@ public record UpdateConsultationRequest(
         ConsultationType type,
         ConsultationStatus status,
         String consultantId,
-        String patientId,
+        String consulteeId,
         String diagnosis,
         String prescription,
         String comments,

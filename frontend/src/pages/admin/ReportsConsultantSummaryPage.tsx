@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { reportsApi } from "../../api/reportsApi";
 import { ApiError } from "../../api/client";
 import type { ConsultantSummaryReport } from "../../types";
@@ -59,7 +60,13 @@ export function ReportsConsultantSummaryPage() {
                   .map((row) => (
                     <tr key={row.consultantId}>
                       <td>{row.consultantId}</td>
-                      <td>{row.consultantName ?? "-"}</td>
+                      <td>
+                        {row.consultantName ? (
+                          <Link to={`/admin/consultations?consultantId=${row.consultantId}`}>{row.consultantName}</Link>
+                        ) : (
+                          "-"
+                        )}
+                      </td>
                       <td>{row.sessionCount}</td>
                       <td>
                         {row.byType.map((tc) => (

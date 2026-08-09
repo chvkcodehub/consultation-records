@@ -32,10 +32,26 @@ export interface AuthResponse {
   consulteeId: string | null;
 }
 
+export type ConsultantSpeciality =
+  | "PEDIATRICIAN"
+  | "DEVELOPMENTAL_PEDIATRICIAN"
+  | "CHILD_PSYCHOLOGIST"
+  | "CLINICAL_PSYCHOLOGIST"
+  | "OCCUPATIONAL_THERAPIST"
+  | "SPEECH_LANGUAGE_PATHOLOGIST"
+  | "PHYSIOTHERAPIST"
+  | "SPECIAL_EDUCATOR"
+  | "BEHAVIOR_THERAPIST"
+  | "SOCIAL_WORKER"
+  | "AUDIOLOGIST"
+  | "NUTRITIONIST"
+  | "NEUROLOGIST"
+  | "PSYCHIATRIST";
+
 export interface Consultant {
   id: string;
   name: string;
-  speciality: string;
+  speciality: ConsultantSpeciality;
   qualification: string;
   experienceYears: number;
   fee: number;
@@ -60,8 +76,8 @@ export interface Consultation {
   status: ConsultationStatus;
   consultantId: string;
   consultantName: string | null;
-  patientId: string;
-  patientName: string | null;
+  consulteeId: string;
+  consulteeName: string | null;
   diagnosis: string | null;
   prescription: string | null;
   comments: string | null;

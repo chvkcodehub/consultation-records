@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { reportsApi } from "../../api/reportsApi";
 import { ApiError } from "../../api/client";
 import type { ConsulteeSessionsReport } from "../../types";
@@ -31,7 +32,7 @@ export function ReportsConsulteeSessionsPage() {
               <span className="tile-icon">
                 <Icon name="calendar" size={18} />
               </span>
-              <div className="label">Total sessions across all patients</div>
+              <div className="label">Total sessions across all consultees</div>
               <div className="value">{report.totalSessions}</div>
             </div>
             <div className="stat-tile">
@@ -57,7 +58,13 @@ export function ReportsConsulteeSessionsPage() {
                   .map((row) => (
                     <tr key={row.consulteeId}>
                       <td>{row.consulteeId}</td>
-                      <td>{row.consulteeName ?? "-"}</td>
+                      <td>
+                        {row.consulteeName ? (
+                          <Link to={`/admin/consultations?consulteeId=${row.consulteeId}`}>{row.consulteeName}</Link>
+                        ) : (
+                          "-"
+                        )}
+                      </td>
                       <td>{row.sessionCount}</td>
                     </tr>
                   ))}

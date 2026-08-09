@@ -5,7 +5,7 @@ import java.util.Date;
 import com.vkc.consultation.records.application.domain.model.ConsultationType;
 
 public record BookConsultationCommand(
-        String patientId,
+        String consulteeId,
         String consultantId,
         ConsultationType type,
         Date consultationDate,

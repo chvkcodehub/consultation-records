@@ -69,9 +69,9 @@ public class ConsulteePortalController {
     @ResponseBody
     public List<ConsultationResponse> myConsultations(@AuthenticationPrincipal AuthenticatedUser user) {
         Map<String, String> consultantNames = consultantNamesById();
-        Map<String, String> patientNames = ownNameById(user.consulteeId());
-        return consultationUseCase.findConsultationByPatient(user.consulteeId()).stream()
-                .map(c -> ConsultationResponse.from(c, consultantNames, patientNames))
+        Map<String, String> consulteeNames = ownNameById(user.consulteeId());
+        return consultationUseCase.findConsultationByConsultee(user.consulteeId()).stream()
+                .map(c -> ConsultationResponse.from(c, consultantNames, consulteeNames))
                 .collect(Collectors.toList());
     }
 

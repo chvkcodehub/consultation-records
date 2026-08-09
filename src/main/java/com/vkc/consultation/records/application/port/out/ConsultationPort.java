@@ -11,7 +11,7 @@ public interface ConsultationPort {
     Consultation findConsultationById(@NonNull String id);
 
     List<Consultation> findConsultationsByConsultant(String consultantId);
-    List<Consultation> findConsultationsByPatient(String patientId);
+    List<Consultation> findConsultationsByConsultee(String consulteeId);
     Consultation saveConsultation(@NonNull Consultation consultation);
     boolean existsById(@NonNull String id);
     void deleteById(@NonNull String id);

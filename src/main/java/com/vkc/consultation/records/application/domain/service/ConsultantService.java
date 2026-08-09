@@ -36,7 +36,6 @@ public class ConsultantService implements ConsultantUseCase {
     @Override
     public Consultant createConsultant(@NonNull CreateConsultantCommand command) {
         Consultant consultant = new Consultant();
-        
         consultant.setName(command.name());
         consultant.setSpeciality(command.speciality());
         consultant.setQualification(command.qualification());

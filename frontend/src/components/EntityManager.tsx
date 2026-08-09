@@ -14,6 +14,8 @@ export interface FieldConfig {
   options?: FieldOption[];
   required?: boolean;
   disabledOnEdit?: boolean;
+  hiddenOnCreate?: boolean;
+  hiddenOnEdit?: boolean;
 }
 
 export interface ColumnConfig<T> {
@@ -34,6 +36,7 @@ interface EntityManagerProps<T extends { id: string }, TInput> {
   };
   toFormValues: (item: T | null) => Record<string, string>;
   fromFormValues: (values: Record<string, string>) => TInput;
+  onFieldChange?: (name: string, value: string, values: Record<string, string>) => Record<string, string> | void;
 }
 
 export function EntityManager<T extends { id: string }, TInput>({
@@ -43,6 +46,7 @@ export function EntityManager<T extends { id: string }, TInput>({
   api,
   toFormValues,
   fromFormValues,
+  onFieldChange,
 }: EntityManagerProps<T, TInput>) {
   const [items, setItems] = useState<T[]>([]);
   const [loading, setLoading] = useState(true);
@@ -87,7 +91,19 @@ export function EntityManager<T extends { id: string }, TInput>({
   };
 
   const handleChange = (name: string, value: string) => {
-    setValues((prev) => ({ ...prev, [name]: value }));
+    setValues((prev) => {
+      const nextValues = { ...prev, [name]: value };
+      const updatedValues = onFieldChange?.(name, value, nextValues);
+      return updatedValues ?? nextValues;
+    });
+  };
+
+  const getFieldValue = (fieldName: string) => {
+    const value = values[fieldName];
+    if (value === undefined || value === null) {
+      return "";
+    }
+    return String(value);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -140,12 +156,16 @@ export function EntityManager<T extends { id: string }, TInput>({
           <div className="form-grid">
             {fields.map((field) => {
               const isDisabled = Boolean(editing && field.disabledOnEdit);
+              const isHidden = (editing ? field.hiddenOnEdit : field.hiddenOnCreate) ?? false;
+              if (isHidden) {
+                return null;
+              }
               return (
                 <label key={field.name} className="form-field">
                   {field.label}
                   {field.type === "select" ? (
                     <select
-                      value={values[field.name] ?? ""}
+                      value={getFieldValue(field.name)}
                       required={field.required}
                       disabled={isDisabled}
                       onChange={(e) => handleChange(field.name, e.target.value)}
@@ -161,7 +181,7 @@ export function EntityManager<T extends { id: string }, TInput>({
                     </select>
                   ) : field.type === "textarea" ? (
                     <textarea
-                      value={values[field.name] ?? ""}
+                      value={getFieldValue(field.name)}
                       required={field.required}
                       disabled={isDisabled}
                       onChange={(e) => handleChange(field.name, e.target.value)}
@@ -169,7 +189,7 @@ export function EntityManager<T extends { id: string }, TInput>({
                   ) : (
                     <input
                       type={field.type}
-                      value={values[field.name] ?? ""}
+                      value={getFieldValue(field.name)}
                       required={field.required}
                       disabled={isDisabled}
                       onChange={(e) => handleChange(field.name, e.target.value)}

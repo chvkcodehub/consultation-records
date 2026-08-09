@@ -22,27 +22,27 @@ export function DashboardPage() {
         </div>
       </div>
       <div className="stat-row">
-        <div className="stat-tile">
+        <Link to="/admin/consultations" className="stat-tile" style={{ textDecoration: "none", color: "inherit" }}>
           <span className="tile-icon">
             <Icon name="calendar" size={18} />
           </span>
           <div className="label">Total sessions</div>
           <div className="value">{consulteeReport?.totalSessions ?? "-"}</div>
-        </div>
-        <div className="stat-tile">
+        </Link>
+        <Link to="/admin/consultees" className="stat-tile" style={{ textDecoration: "none", color: "inherit" }}>
           <span className="tile-icon teal">
             <Icon name="users" size={18} />
           </span>
           <div className="label">Consultees with sessions</div>
           <div className="value">{consulteeReport?.breakdown.length ?? "-"}</div>
-        </div>
-        <div className="stat-tile">
+        </Link>
+        <Link to="/admin/consultants" className="stat-tile" style={{ textDecoration: "none", color: "inherit" }}>
           <span className="tile-icon">
             <Icon name="stethoscope" size={18} />
           </span>
           <div className="label">Active consultants</div>
           <div className="value">{consultantReport?.totalConsultants ?? "-"}</div>
-        </div>
+        </Link>
       </div>
       <div className="card">
         <p>

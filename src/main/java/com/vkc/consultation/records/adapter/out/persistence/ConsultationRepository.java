@@ -10,6 +10,6 @@ import com.vkc.consultation.records.adapter.out.persistence.entity.ConsultationD
 public interface ConsultationRepository extends MongoRepository<ConsultationDocument, String> {
     @Query("{consultantId : ?0}")
     List<ConsultationDocument> findConsultationsByConsultant(String consultantId);
-    @Query("{patientId : ?0}")
-    List<ConsultationDocument> findConsultationsByPatient(String patientId);
+    @Query("{consulteeId : ?0}")
+    List<ConsultationDocument> findConsultationsByConsultee(String consulteeId);
 }

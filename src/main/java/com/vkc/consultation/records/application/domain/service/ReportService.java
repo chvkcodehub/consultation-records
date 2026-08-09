@@ -39,11 +39,11 @@ public class ReportService implements ReportUseCase {
         Map<String, String> consulteeNamesById = consulteePort.findAll().stream()
                 .collect(Collectors.toMap(Consultee::getId, Consultee::getName, (a, b) -> a));
 
-        Map<String, Long> sessionsByPatient = consultations.stream()
-                .filter(c -> c.getPatientId() != null)
-                .collect(Collectors.groupingBy(Consultation::getPatientId, Collectors.counting()));
+        Map<String, Long> sessionsByConsultee = consultations.stream()
+                .filter(c -> c.getConsulteeId() != null)
+                .collect(Collectors.groupingBy(Consultation::getConsulteeId, Collectors.counting()));
 
-        List<ConsulteeSessionBreakdown> breakdown = sessionsByPatient.entrySet().stream()
+        List<ConsulteeSessionBreakdown> breakdown = sessionsByConsultee.entrySet().stream()
                 .map(entry -> {
                     ConsulteeSessionBreakdown item = new ConsulteeSessionBreakdown();
                     item.setConsulteeId(entry.getKey());

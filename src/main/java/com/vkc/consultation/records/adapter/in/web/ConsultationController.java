@@ -47,7 +47,7 @@ public class ConsultationController {
                 .collect(Collectors.toMap(Consultant::getId, Consultant::getName, (a, b) -> a));
     }
 
-    private Map<String, String> patientNamesById() {
+    private Map<String, String> consulteeNamesById() {
         return consulteeUseCase.findConsultees().stream()
                 .collect(Collectors.toMap(Consultee::getId, Consultee::getName, (a, b) -> a));
     }
@@ -56,9 +56,9 @@ public class ConsultationController {
     @ResponseBody
     public List<ConsultationResponse> fetchConsultations() {
         Map<String, String> consultantNames = consultantNamesById();
-        Map<String, String> patientNames = patientNamesById();
+        Map<String, String> consulteeNames = consulteeNamesById();
         return consultationUseCase.findConsultations().stream()
-                .map(c -> ConsultationResponse.from(c, consultantNames, patientNames))
+                .map(c -> ConsultationResponse.from(c, consultantNames, consulteeNames))
                 .collect(Collectors.toList());
     }
 
@@ -66,26 +66,26 @@ public class ConsultationController {
     @ResponseBody
     public ConsultationResponse findConsultation(@PathVariable String id) {
         return ConsultationResponse.from(consultationUseCase.findConsultationById(id), consultantNamesById(),
-                patientNamesById());
+                consulteeNamesById());
     }
 
     @GetMapping(path = "/consultations/consultant/{consultantId}")
     @ResponseBody
     public List<ConsultationResponse> findConsultationByConsultant(@PathVariable String consultantId) {
         Map<String, String> consultantNames = consultantNamesById();
-        Map<String, String> patientNames = patientNamesById();
+        Map<String, String> consulteeNames = consulteeNamesById();
         return consultationUseCase.findConsultationByConsultant(consultantId).stream()
-                .map(c -> ConsultationResponse.from(c, consultantNames, patientNames))
+                .map(c -> ConsultationResponse.from(c, consultantNames, consulteeNames))
                 .collect(Collectors.toList());
     }
 
-    @GetMapping(path = "/consultations/patient/{patientId}")
+    @GetMapping(path = "/consultations/consultee/{consulteeId}")
     @ResponseBody
-    public List<ConsultationResponse> findConsultationByPatient(@PathVariable String patientId) {
+    public List<ConsultationResponse> findConsultationByPatient(@PathVariable String consulteeId) {
         Map<String, String> consultantNames = consultantNamesById();
-        Map<String, String> patientNames = patientNamesById();
-        return consultationUseCase.findConsultationByPatient(patientId).stream()
-                .map(c -> ConsultationResponse.from(c, consultantNames, patientNames))
+        Map<String, String> consulteeNames = consulteeNamesById();
+        return consultationUseCase.findConsultationByConsultee(consulteeId).stream()
+                .map(c -> ConsultationResponse.from(c, consultantNames, consulteeNames))
                 .collect(Collectors.toList());
     }
 
@@ -94,11 +94,11 @@ public class ConsultationController {
     @ResponseBody
     public ConsultationResponse createConsultation(@RequestBody CreateConsultationRequest request) {
         CreateConsultationCommand command = new CreateConsultationCommand(
-                request.type(), request.status(), request.consultantId(), request.patientId(),
+                request.type(), request.status(), request.consultantId(), request.consulteeId(),
                 request.diagnosis(), request.prescription(), request.comments(),
                 request.consultationDate(), request.followUpDate(), request.createdBy(), request.fee());
         return ConsultationResponse.from(consultationUseCase.createConsultation(command), consultantNamesById(),
-                patientNamesById());
+                consulteeNamesById());
     }
 
     @PutMapping(path = "/consultations/id/{id}")
@@ -106,12 +106,12 @@ public class ConsultationController {
     public ConsultationResponse updateConsultation(@PathVariable String id,
             @RequestBody UpdateConsultationRequest request) {
         UpdateConsultationCommand command = new UpdateConsultationCommand(
-                request.type(), request.status(), request.consultantId(), request.patientId(),
+                request.type(), request.status(), request.consultantId(), request.consulteeId(),
                 request.diagnosis(), request.prescription(), request.comments(),
                 request.consultationDate(), request.followUpDate(), request.updatedDate(),
                 request.createdBy(), request.fee());
         return ConsultationResponse.from(consultationUseCase.updateConsultation(id, command), consultantNamesById(),
-                patientNamesById());
+                consulteeNamesById());
     }
 
     @DeleteMapping(path = "/consultations/id/{id}")

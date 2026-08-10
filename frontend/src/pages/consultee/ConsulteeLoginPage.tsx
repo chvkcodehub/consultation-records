@@ -34,8 +34,9 @@ export function ConsulteeLoginPage() {
   };
 
   return (
-    <AuthShell title="Consultee sign in" subtitle="Book and manage your consultations.">
-      <form onSubmit={handleSubmit}>
+    <div className="auth-login-page">
+      <AuthShell title="Consultee sign in" subtitle="Book and manage your consultations.">
+      <form className="auth-login-form" onSubmit={handleSubmit}>
         <div className="form-field">
           <label>Email</label>
           <div className="field-icon">
@@ -66,6 +67,7 @@ export function ConsulteeLoginPage() {
       <p className="auth-links">
         Are you a consultant? <Link to="/consultant/login">Sign in here</Link>
       </p>
-    </AuthShell>
+      </AuthShell>
+    </div>
   );
 }

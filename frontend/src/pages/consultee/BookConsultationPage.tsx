@@ -43,14 +43,14 @@ export function BookConsultationPage() {
   };
 
   return (
-    <div>
+    <div className="consultee-book-page">
       <div className="page-header">
         <div>
           <h2>Book a Consultation</h2>
           <p className="subtitle">Pick a consultant and a time that works for you.</p>
         </div>
       </div>
-      <form className="card" onSubmit={handleSubmit} style={{ maxWidth: 480 }}>
+      <form className="card booking-card" onSubmit={handleSubmit} style={{ maxWidth: 480 }}>
         <div className="form-grid">
           <label className="form-field">
             Consultant

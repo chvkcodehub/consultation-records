@@ -83,12 +83,6 @@ export function ConsultantDashboardPage() {
           <h2>Dashboard by Consultee</h2>
           <p className="subtitle">Track session volume and outcomes for each consultee you have seen.</p>
         </div>
-        <Link to="/consultant/sessions">
-          <button className="primary">
-            <Icon name="plus" size={16} />
-            Record session
-          </button>
-        </Link>
       </div>
 
       {error && <p className="error-text">{error}</p>}
@@ -150,6 +144,15 @@ export function ConsultantDashboardPage() {
                 )}
               </tbody>
             </table>
+          </div>
+
+          <div className="form-actions" style={{ justifyContent: "flex-end" }}>
+            <Link to="/consultant/sessions/record">
+              <button className="primary">
+                <Icon name="plus" size={16} />
+                Record a Session
+              </button>
+            </Link>
           </div>
         </>
       )}

@@ -100,7 +100,7 @@ export function ConsultantProfilePage() {
   };
 
   return (
-    <div>
+    <div className="consultant-profile-page">
       <div className="page-header">
         <div>
           <h2>My Profile</h2>
@@ -133,8 +133,9 @@ export function ConsultantProfilePage() {
             ))}
           </div>
 
-          <form className="card" onSubmit={onChangeEmail}>
+          <form className="card email-card" onSubmit={onChangeEmail}>
             <h3>Change Email</h3>
+            <p className="subtitle">Keep your account updated with your latest login email.</p>
             <div className="form-grid single-column">
               <label className="form-field">
                 Email
@@ -162,8 +163,8 @@ export function ConsultantProfilePage() {
                   </button>
                 </>
               ) : (
-                <button type="button" onClick={() => setEditingEmail(true)}>
-                  Edit email
+                <button className="primary" type="button" onClick={() => setEditingEmail(true)}>
+                  Change Email
                 </button>
               )}
             </div>
@@ -181,7 +182,7 @@ export function ConsultantProfilePage() {
 
           {showPasswordModal ? (
             <div className="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="password-modal-title">
-              <div className="modal-card">
+              <div className="modal-card password-modal-card">
                 <div className="modal-header">
                   <h3 id="password-modal-title">{firstLogin ? "Set New Password" : "Change Password"}</h3>
                   {!firstLogin ? (

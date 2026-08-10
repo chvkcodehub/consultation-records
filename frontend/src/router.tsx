@@ -58,6 +58,7 @@ export const router = createBrowserRouter([
         children: [
           { index: true, element: <ConsultantDashboardPage /> },
           { path: "sessions", element: <ConsultantSessionsPage /> },
+          { path: "sessions/record", element: <ConsultantSessionsPage /> },
           { path: "profile", element: <ConsultantProfilePage /> },
         ],
       },

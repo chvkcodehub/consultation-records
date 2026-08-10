@@ -34,8 +34,9 @@ export function AdminLoginPage() {
   };
 
   return (
-    <AuthShell title="Admin sign in" subtitle="Manage consultants, consultees, and reports.">
-      <form onSubmit={handleSubmit}>
+    <div className="auth-login-page">
+      <AuthShell title="Admin sign in" subtitle="Manage consultants, consultees, and reports.">
+      <form className="auth-login-form" onSubmit={handleSubmit}>
         <div className="form-field">
           <label>Email</label>
           <div className="field-icon">
@@ -66,6 +67,7 @@ export function AdminLoginPage() {
       <p className="auth-links">
         No admin account yet? <Link to="/admin/register">Create one</Link>
       </p>
-    </AuthShell>
+      </AuthShell>
+    </div>
   );
 }

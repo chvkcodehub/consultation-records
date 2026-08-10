@@ -44,16 +44,6 @@ export function DashboardPage() {
           <div className="value">{consultantReport?.totalConsultants ?? "-"}</div>
         </Link>
       </div>
-      <div className="card">
-        <p>
-          Manage <Link to="/admin/consultants">consultants</Link>, <Link to="/admin/consultees">consultees</Link>,{" "}
-          <Link to="/admin/consultations">consultations</Link> and <Link to="/admin/goals">goals</Link>.
-        </p>
-        <p>
-          View the <Link to="/admin/reports/consultees">consultee sessions report</Link> or the{" "}
-          <Link to="/admin/reports/consultants">consultant summary report</Link>.
-        </p>
-      </div>
     </div>
   );
 }

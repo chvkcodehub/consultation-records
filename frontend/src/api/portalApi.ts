@@ -13,4 +13,7 @@ export const portalApi = {
   myConsultations: () => apiClient.get<Consultation[]>("/portal/consultations"),
   myConsultationDetail: (id: string) => apiClient.get<Consultation>(`/portal/consultations/${id}`),
   myProfile: () => apiClient.get<Consultee>("/portal/me"),
+  changePassword: (payload: { currentPassword: string; newPassword: string }) =>
+    apiClient.post<void>("/portal/change-password", payload),
+  changeEmail: (payload: { newEmail: string }) => apiClient.post<Consultee>("/portal/change-email", payload),
 };

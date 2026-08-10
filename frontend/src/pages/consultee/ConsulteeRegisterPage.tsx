@@ -42,8 +42,9 @@ export function ConsulteeRegisterPage() {
   };
 
   return (
-    <AuthShell title="Create your account" subtitle="Register to book and track your consultations." maxWidth={480}>
-      <form onSubmit={handleSubmit}>
+    <div className="consultee-register-page">
+      <AuthShell title="Create your account" subtitle="Register to book and track your consultations." maxWidth={480}>
+      <form className="consultee-register-form" onSubmit={handleSubmit}>
         <div className="form-grid">
           <label className="form-field">
             Full name
@@ -70,7 +71,13 @@ export function ConsulteeRegisterPage() {
           </label>
           <label className="form-field">
             Gender
-            <input value={form.gender} onChange={(e) => update("gender", e.target.value)} />
+            <select value={form.gender} onChange={(e) => update("gender", e.target.value)}>
+              <option value="" disabled>
+                Select gender...
+              </option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
           </label>
           <label className="form-field">
             Date of birth
@@ -90,11 +97,17 @@ export function ConsulteeRegisterPage() {
           <button className="primary" type="submit" disabled={submitting} style={{ width: "100%", justifyContent: "center" }}>
             Create account
           </button>
+          <Link to="/" style={{ width: "100%" }}>
+            <button type="button" style={{ width: "100%", justifyContent: "center" }}>
+              Cancel
+            </button>
+          </Link>
         </div>
       </form>
       <p className="auth-links">
         Already registered? <Link to="/consultee/login">Sign in</Link>
       </p>
-    </AuthShell>
+      </AuthShell>
+    </div>
   );
 }

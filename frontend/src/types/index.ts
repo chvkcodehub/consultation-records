@@ -1,7 +1,7 @@
 // Backend serializes java.util.Date as epoch-millis by default; accepts ISO strings on write.
 export type ApiDate = string | number | null;
 
-export type Role = "ADMIN" | "CONSULTEE";
+export type Role = "ADMIN" | "CONSULTEE" | "CONSULTANT";
 
 export type ConsultationType =
   | "INITIAL_CONSULTATION"
@@ -30,6 +30,8 @@ export interface AuthResponse {
   token: string;
   role: Role;
   consulteeId: string | null;
+  consultantId: string | null;
+  passwordChangeRequired: boolean;
 }
 
 export type ConsultantSpeciality =
@@ -51,6 +53,8 @@ export type ConsultantSpeciality =
 export interface Consultant {
   id: string;
   name: string;
+  email: string;
+  mobile: string | null;
   speciality: ConsultantSpeciality;
   qualification: string;
   experienceYears: number;
@@ -81,6 +85,8 @@ export interface Consultation {
   diagnosis: string | null;
   prescription: string | null;
   comments: string | null;
+  rating: number | null;
+  feedback: string | null;
   consultationDate: ApiDate;
   followUpDate: ApiDate;
   updatedDate: ApiDate;

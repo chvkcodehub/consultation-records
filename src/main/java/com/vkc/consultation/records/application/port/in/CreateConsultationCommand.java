@@ -15,6 +15,8 @@ public record CreateConsultationCommand(
         String diagnosis,
         String prescription,
         String comments,
+        Integer rating,
+        String feedback,
         Date consultationDate,
         Date followUpDate,
         String createdBy,

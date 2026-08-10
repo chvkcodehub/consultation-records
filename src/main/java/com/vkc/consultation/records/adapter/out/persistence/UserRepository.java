@@ -8,5 +8,6 @@ import com.vkc.consultation.records.adapter.out.persistence.entity.UserDocument;
 
 public interface UserRepository extends MongoRepository<UserDocument, String> {
     Optional<UserDocument> findByEmail(String email);
+    Optional<UserDocument> findByConsultantId(String consultantId);
     boolean existsByEmail(String email);
 }

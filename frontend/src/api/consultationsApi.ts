@@ -6,6 +6,7 @@ export type ConsultationFormInput = Omit<Consultation, "id" | "updatedDate" | "c
 
 export const consultationsApi = {
   list: () => apiClient.get<Consultation[]>("/consultations"),
+  listByConsultant: (consultantId: string) => apiClient.get<Consultation[]>(`/consultations/consultant/${consultantId}`),
   get: (id: string) => apiClient.get<Consultation>(`/consultations/id/${id}`),
   create: (payload: ConsultationFormInput) => apiClient.post<Consultation>("/consultations", payload),
   update: (id: string, payload: ConsultationFormInput) =>

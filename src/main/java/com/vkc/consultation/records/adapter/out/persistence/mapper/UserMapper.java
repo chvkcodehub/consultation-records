@@ -15,6 +15,8 @@ public class UserMapper {
         user.setPasswordHash(doc.getPasswordHash());
         user.setRole(doc.getRole() != null ? Role.valueOf(doc.getRole()) : null);
         user.setConsulteeId(doc.getConsulteeId());
+        user.setConsultantId(doc.getConsultantId());
+        user.setPasswordChangeRequired(doc.isPasswordChangeRequired());
         user.setCreatedAt(doc.getCreatedAt());
         user.setResetToken(doc.getResetToken());
         user.setResetTokenExpiry(doc.getResetTokenExpiry());
@@ -28,6 +30,8 @@ public class UserMapper {
         doc.setPasswordHash(user.getPasswordHash());
         doc.setRole(user.getRole() != null ? user.getRole().name() : null);
         doc.setConsulteeId(user.getConsulteeId());
+        doc.setConsultantId(user.getConsultantId());
+        doc.setPasswordChangeRequired(user.isPasswordChangeRequired());
         doc.setCreatedAt(user.getCreatedAt());
         doc.setResetToken(user.getResetToken());
         doc.setResetTokenExpiry(user.getResetTokenExpiry());

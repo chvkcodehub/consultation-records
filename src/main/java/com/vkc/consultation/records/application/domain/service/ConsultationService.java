@@ -60,6 +60,8 @@ public class ConsultationService implements ConsultationUseCase {
         consultation.setDiagnosis(command.diagnosis());
         consultation.setPrescription(command.prescription());
         consultation.setComments(command.comments());
+        consultation.setRating(command.rating());
+        consultation.setFeedback(command.feedback());
         consultation.setConsultationDate(command.consultationDate());
         consultation.setFollowUpDate(command.followUpDate());
         consultation.setCreatedBy(command.createdBy());
@@ -82,6 +84,8 @@ public class ConsultationService implements ConsultationUseCase {
         consultation.setDiagnosis(command.diagnosis());
         consultation.setPrescription(command.prescription());
         consultation.setComments(command.comments());
+        consultation.setRating(command.rating());
+        consultation.setFeedback(command.feedback());
         consultation.setConsultationDate(command.consultationDate());
         consultation.setFollowUpDate(command.followUpDate());
         consultation.setUpdatedDate(command.updatedDate());

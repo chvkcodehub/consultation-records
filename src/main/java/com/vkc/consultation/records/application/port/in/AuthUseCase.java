@@ -6,4 +6,6 @@ public interface AuthUseCase {
     AuthResult registerConsultee(RegisterConsulteeCommand command);
     void forgotPassword(String email);
     void resetPassword(String email, String resetToken, String newPassword);
+    void changePassword(String email, String consultantId, String currentPassword, String newPassword);
+    void changeEmail(String currentEmail, String consultantId, String newEmail, String currentPassword);
 }

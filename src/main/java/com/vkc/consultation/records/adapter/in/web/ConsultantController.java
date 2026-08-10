@@ -81,7 +81,7 @@ public class ConsultantController {
                     description = "Consultant details to create", required = true)
             @RequestBody CreateConsultantRequest request) {
         CreateConsultantCommand command = new CreateConsultantCommand(
-                request.name(), request.speciality(),
+            request.name(), request.email(), request.mobile(), request.speciality(),
                 request.qualification(), request.experienceYears(), request.fee());
         return ConsultantResponse.from(consultantUseCase.createConsultant(command));
     }
@@ -102,7 +102,7 @@ public class ConsultantController {
                     description = "Updated consultant details", required = true)
             @RequestBody UpdateConsultantRequest request) {
         UpdateConsultantCommand command = new UpdateConsultantCommand(
-                request.name(), request.speciality(),
+                request.name(), request.email(), request.mobile(), request.speciality(),
                 request.qualification(), request.experienceYears(), request.fee());
         return ConsultantResponse.from(consultantUseCase.updateConsultant(id, command));
     }

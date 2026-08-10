@@ -13,6 +13,8 @@ public class ConsultantDocument {
     @Id
     private String id;
     private String name;
+    private String email;
+    private String mobile;
     private SpecialityType speciality;
     private String qualification;
     private int experienceYears;

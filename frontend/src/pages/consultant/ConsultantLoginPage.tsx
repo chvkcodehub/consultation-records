@@ -6,7 +6,7 @@ import { useAuth } from "../../auth/useAuth";
 import { AuthShell } from "../../components/AuthShell";
 import { Icon } from "../../components/Icon";
 
-export function AdminLoginPage() {
+export function ConsultantLoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -20,12 +20,12 @@ export function AdminLoginPage() {
     setError(null);
     try {
       const auth = await authApi.login(email, password);
-      if (auth.role !== "ADMIN") {
-        setError("This account is not an administrator account.");
+      if (auth.role !== "CONSULTANT") {
+        setError("This account is not a consultant account.");
         return;
       }
       login(auth, email);
-      navigate("/admin");
+      navigate(auth.passwordChangeRequired ? "/consultant/profile?firstLogin=1" : "/consultant");
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Login failed");
     } finally {
@@ -34,7 +34,7 @@ export function AdminLoginPage() {
   };
 
   return (
-    <AuthShell title="Admin sign in" subtitle="Manage consultants, consultees, and reports.">
+    <AuthShell title="Consultant sign in" subtitle="Record and review your consultation sessions.">
       <form onSubmit={handleSubmit}>
         <div className="form-field">
           <label>Email</label>
@@ -61,10 +61,7 @@ export function AdminLoginPage() {
         Are you a consultee? <Link to="/consultee/login">Sign in here</Link>
       </p>
       <p className="auth-links">
-        Are you a consultant? <Link to="/consultant/login">Sign in here</Link>
-      </p>
-      <p className="auth-links">
-        No admin account yet? <Link to="/admin/register">Create one</Link>
+        Are you an administrator? <Link to="/admin/login">Sign in here</Link>
       </p>
     </AuthShell>
   );

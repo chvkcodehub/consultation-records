@@ -19,11 +19,16 @@ import { BookConsultationPage } from "./pages/consultee/BookConsultationPage";
 import { MyConsultationsPage } from "./pages/consultee/MyConsultationsPage";
 import { ConsultationDetailPage } from "./pages/consultee/ConsultationDetailPage";
 import { MyProfilePage } from "./pages/consultee/MyProfilePage";
+import { ConsultantLoginPage } from "./pages/consultant/ConsultantLoginPage";
+import { ConsultantSessionsPage } from "./pages/consultant/ConsultantSessionsPage";
+import { ConsultantDashboardPage } from "./pages/consultant/ConsultantDashboardPage";
+import { ConsultantProfilePage } from "./pages/consultant/ConsultantProfilePage";
 
 export const router = createBrowserRouter([
   { path: "/", element: <HomePage /> },
   { path: "/admin/login", element: <AdminLoginPage /> },
   { path: "/admin/register", element: <AdminRegisterPage /> },
+  { path: "/consultant/login", element: <ConsultantLoginPage /> },
   { path: "/consultee/login", element: <ConsulteeLoginPage /> },
   { path: "/consultee/register", element: <ConsulteeRegisterPage /> },
   {
@@ -40,6 +45,20 @@ export const router = createBrowserRouter([
           { path: "goals", element: <GoalsPage /> },
           { path: "reports/consultees", element: <ReportsConsulteeSessionsPage /> },
           { path: "reports/consultants", element: <ReportsConsultantSummaryPage /> },
+        ],
+      },
+    ],
+  },
+  {
+    element: <RequireRole role="CONSULTANT" />,
+    children: [
+      {
+        path: "/consultant",
+        element: <Layout />,
+        children: [
+          { index: true, element: <ConsultantDashboardPage /> },
+          { path: "sessions", element: <ConsultantSessionsPage /> },
+          { path: "profile", element: <ConsultantProfilePage /> },
         ],
       },
     ],

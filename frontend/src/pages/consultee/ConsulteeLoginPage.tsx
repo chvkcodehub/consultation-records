@@ -63,6 +63,9 @@ export function ConsulteeLoginPage() {
       <p className="auth-links">
         Are you an administrator? <Link to="/admin/login">Sign in here</Link>
       </p>
+      <p className="auth-links">
+        Are you a consultant? <Link to="/consultant/login">Sign in here</Link>
+      </p>
     </AuthShell>
   );
 }

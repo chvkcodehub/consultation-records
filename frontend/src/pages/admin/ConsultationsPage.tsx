@@ -89,6 +89,8 @@ function ConsultationsPageContent() {
     { name: "diagnosis", label: "Diagnosis", type: "textarea" },
     { name: "prescription", label: "Prescription", type: "textarea", hiddenOnCreate: true },
     { name: "comments", label: "Comments", type: "textarea" },
+    { name: "rating", label: "Rating (1-5)", type: "number" },
+    { name: "feedback", label: "Feedback", type: "textarea" },
     { name: "createdBy", label: "Created by", type: "text", hiddenOnCreate: true },
     { name: "fee", label: "Fee", type: "number" },
   ];
@@ -120,6 +122,8 @@ function ConsultationsPageContent() {
         diagnosis: item?.diagnosis ?? "",
         prescription: item?.prescription ?? "",
         comments: item?.comments ?? "",
+        rating: item?.rating ? String(item.rating) : "",
+        feedback: item?.feedback ?? "",
         createdBy: item?.createdBy ?? email ?? "",
         fee: item?.fee ? String(item.fee) : "",
       })}
@@ -133,6 +137,8 @@ function ConsultationsPageContent() {
         diagnosis: values.diagnosis || null,
         prescription: values.prescription || null,
         comments: values.comments || null,
+        rating: values.rating ? Number(values.rating) : null,
+        feedback: values.feedback || null,
         createdBy: values.createdBy || email || null,
         fee: values.fee ? Number(values.fee) : null,
       })}

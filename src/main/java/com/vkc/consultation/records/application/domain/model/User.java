@@ -11,6 +11,8 @@ public class User {
     private String passwordHash;
     private Role role;
     private String consulteeId;
+    private String consultantId;
+    private boolean passwordChangeRequired;
     private Instant createdAt;
     private String resetToken;
     private Instant resetTokenExpiry;

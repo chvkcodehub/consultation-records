@@ -23,6 +23,11 @@ public class UserAdapter implements UserPort {
     }
 
     @Override
+    public Optional<User> findByConsultantId(String consultantId) {
+        return userRepository.findByConsultantId(consultantId).map(UserMapper::toDomain);
+    }
+
+    @Override
     public User save(User user) {
         return UserMapper.toDomain(userRepository.save(UserMapper.toDocument(user)));
     }

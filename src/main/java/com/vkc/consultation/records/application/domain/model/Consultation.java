@@ -15,6 +15,8 @@ public class Consultation {
     private String diagnosis;
     private String prescription;
     private String comments;
+    private Integer rating;
+    private String feedback;
     private Date consultationDate;
     private Date followUpDate;
     private Date updatedDate;

@@ -4,6 +4,8 @@ import com.vkc.consultation.records.application.domain.model.SpecialityType;
 
 public record UpdateConsultantCommand(
         String name,
+        String email,
+        String mobile,
         SpecialityType speciality,
         String qualification,
         int experienceYears,

@@ -44,10 +44,11 @@ public class AuthService implements AuthUseCase {
         user.setEmail(email);
         user.setPasswordHash(passwordEncoder.encode(password));
         user.setRole(Role.ADMIN);
+        user.setPasswordChangeRequired(false);
         user.setCreatedAt(Instant.now());
         userPort.save(user);
-        String token = tokenPort.generateToken(email, Role.ADMIN.name(), null);
-        return new AuthResult(token, Role.ADMIN.name(), null);
+        String token = tokenPort.generateToken(email, Role.ADMIN.name(), null, null);
+        return new AuthResult(token, Role.ADMIN.name(), null, null, false);
     }
 
     @Override
@@ -58,8 +59,9 @@ public class AuthService implements AuthUseCase {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
         }
         String role = user.getRole().name();
-        String token = tokenPort.generateToken(email, role, user.getConsulteeId());
-        return new AuthResult(token, role, user.getConsulteeId());
+        String token = tokenPort.generateToken(email, role, user.getConsulteeId(), user.getConsultantId());
+        return new AuthResult(token, role, user.getConsulteeId(), user.getConsultantId(),
+            user.isPasswordChangeRequired());
     }
 
     @Override
@@ -77,11 +79,12 @@ public class AuthService implements AuthUseCase {
         user.setPasswordHash(passwordEncoder.encode(command.password()));
         user.setRole(Role.CONSULTEE);
         user.setConsulteeId(consulteeId);
+        user.setPasswordChangeRequired(false);
         user.setCreatedAt(Instant.now());
         userPort.save(user);
 
-        String token = tokenPort.generateToken(command.email(), Role.CONSULTEE.name(), consulteeId);
-        return new AuthResult(token, Role.CONSULTEE.name(), consulteeId);
+        String token = tokenPort.generateToken(command.email(), Role.CONSULTEE.name(), consulteeId, null);
+        return new AuthResult(token, Role.CONSULTEE.name(), consulteeId, null, false);
     }
 
     private String createConsultee(RegisterConsulteeCommand command) {
@@ -118,8 +121,50 @@ public class AuthService implements AuthUseCase {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Reset token has expired");
         }
         user.setPasswordHash(passwordEncoder.encode(newPassword));
+        user.setPasswordChangeRequired(false);
         user.setResetToken(null);
         user.setResetTokenExpiry(null);
         userPort.save(user);
+    }
+
+    @Override
+    public void changePassword(String email, String consultantId, String currentPassword, String newPassword) {
+        User user = resolveUserForCredentialUpdate(email, consultantId);
+        if (!passwordEncoder.matches(currentPassword, user.getPasswordHash())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Current password is incorrect");
+        }
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        user.setPasswordChangeRequired(false);
+        userPort.save(user);
+    }
+
+    @Override
+    public void changeEmail(String currentEmail, String consultantId, String newEmail, String currentPassword) {
+        if (newEmail == null || newEmail.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "New email is required");
+        }
+
+        User user = resolveUserForCredentialUpdate(currentEmail, consultantId);
+        if (!passwordEncoder.matches(currentPassword, user.getPasswordHash())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Current password is incorrect");
+        }
+
+        boolean emailChanged = !newEmail.trim().equalsIgnoreCase(currentEmail.trim());
+        if (emailChanged && userPort.existsByEmail(newEmail.trim())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already registered");
+        }
+
+        user.setEmail(newEmail.trim());
+        userPort.save(user);
+    }
+
+    private User resolveUserForCredentialUpdate(String email, String consultantId) {
+        if (consultantId != null && !consultantId.isBlank()) {
+            return userPort.findByConsultantId(consultantId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        }
+
+        return userPort.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
     }
 }

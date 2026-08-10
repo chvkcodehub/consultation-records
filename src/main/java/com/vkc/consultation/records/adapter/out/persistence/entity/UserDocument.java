@@ -20,6 +20,8 @@ public class UserDocument {
     private String passwordHash;
     private String role;
     private String consulteeId;
+    private String consultantId;
+    private boolean passwordChangeRequired;
     private Instant createdAt;
     private String resetToken;
     private Instant resetTokenExpiry;

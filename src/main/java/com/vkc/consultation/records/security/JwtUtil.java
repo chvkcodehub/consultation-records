@@ -30,7 +30,7 @@ public class JwtUtil implements TokenPort {
     }
 
     @Override
-    public String generateToken(String email, String role, String consulteeId) {
+    public String generateToken(String email, String role, String consulteeId, String consultantId) {
         Instant now = Instant.now();
         JwtBuilder builder = Jwts.builder()
                 .subject(email)
@@ -40,6 +40,9 @@ public class JwtUtil implements TokenPort {
                 .signWith(secretKey);
         if (consulteeId != null) {
             builder.claim("consulteeId", consulteeId);
+        }
+        if (consultantId != null) {
+            builder.claim("consultantId", consultantId);
         }
         return builder.compact();
     }
@@ -54,6 +57,10 @@ public class JwtUtil implements TokenPort {
 
     public String extractConsulteeId(String token) {
         return parseClaims(token).get("consulteeId", String.class);
+    }
+
+    public String extractConsultantId(String token) {
+        return parseClaims(token).get("consultantId", String.class);
     }
 
     public boolean isValid(String token) {

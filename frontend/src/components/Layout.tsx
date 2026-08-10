@@ -19,6 +19,12 @@ const consulteeLinks: { to: string; label: string; icon: IconName; end?: boolean
   { to: "/consultee/profile", label: "My Profile", icon: "user-circle" },
 ];
 
+const consultantLinks: { to: string; label: string; icon: IconName; end?: boolean }[] = [
+  { to: "/consultant", label: "Dashboard", icon: "dashboard", end: true },
+  { to: "/consultant/sessions", label: "Session Records", icon: "calendar" },
+  { to: "/consultant/profile", label: "My Profile", icon: "user-circle" },
+];
+
 function initialsFor(email: string | null) {
   if (!email) return "?";
   return email.charAt(0).toUpperCase();
@@ -26,7 +32,7 @@ function initialsFor(email: string | null) {
 
 export function Layout() {
   const { role, email, logout } = useAuth();
-  const links = role === "ADMIN" ? adminLinks : consulteeLinks;
+  const links = role === "ADMIN" ? adminLinks : role === "CONSULTANT" ? consultantLinks : consulteeLinks;
 
   return (
     <div className="app-shell">
@@ -35,7 +41,7 @@ export function Layout() {
           <span className="brand-mark">
             <Icon name="brand" size={18} />
           </span>
-          <span>Consultation Records</span>
+          <span>SparkLeaf Development Centre</span>
         </div>
         <nav className="app-nav">
           {links.map((link) => (

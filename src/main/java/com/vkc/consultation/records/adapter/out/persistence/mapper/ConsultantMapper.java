@@ -11,6 +11,8 @@ public class ConsultantMapper {
         Consultant consultant = new Consultant();
         consultant.setId(doc.getId());
         consultant.setName(doc.getName());
+        consultant.setEmail(doc.getEmail());
+        consultant.setMobile(doc.getMobile());
         consultant.setSpeciality(doc.getSpeciality());
         consultant.setQualification(doc.getQualification());
         consultant.setExperienceYears(doc.getExperienceYears());
@@ -22,6 +24,8 @@ public class ConsultantMapper {
         ConsultantDocument doc = new ConsultantDocument();
         doc.setId(consultant.getId());
         doc.setName(consultant.getName());
+        doc.setEmail(consultant.getEmail());
+        doc.setMobile(consultant.getMobile());
         doc.setSpeciality(consultant.getSpeciality());
         doc.setQualification(consultant.getQualification());
         doc.setExperienceYears(consultant.getExperienceYears());

@@ -6,6 +6,7 @@ import com.vkc.consultation.records.application.domain.model.User;
 
 public interface UserPort {
     Optional<User> findByEmail(String email);
+    Optional<User> findByConsultantId(String consultantId);
     User save(User user);
     boolean existsByEmail(String email);
 }

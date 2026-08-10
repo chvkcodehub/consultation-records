@@ -7,11 +7,15 @@ interface AuthState {
   role: Role | null;
   email: string | null;
   consulteeId: string | null;
+  consultantId: string | null;
+  passwordChangeRequired: boolean;
 }
 
 interface AuthContextValue extends AuthState {
   isAuthenticated: boolean;
   login: (auth: AuthResponse, email: string) => void;
+  updateEmail: (email: string) => void;
+  clearPasswordChangeRequired: () => void;
   logout: () => void;
 }
 
@@ -20,12 +24,20 @@ const STORAGE_KEY = "auth";
 function loadState(): AuthState {
   const raw = localStorage.getItem(STORAGE_KEY);
   if (!raw) {
-    return { token: null, role: null, email: null, consulteeId: null };
+    return { token: null, role: null, email: null, consulteeId: null, consultantId: null, passwordChangeRequired: false };
   }
   try {
-    return JSON.parse(raw) as AuthState;
+    const parsed = JSON.parse(raw) as Partial<AuthState>;
+    return {
+      token: parsed.token ?? null,
+      role: parsed.role ?? null,
+      email: parsed.email ?? null,
+      consulteeId: parsed.consulteeId ?? null,
+      consultantId: parsed.consultantId ?? null,
+      passwordChangeRequired: parsed.passwordChangeRequired ?? false,
+    };
   } catch {
-    return { token: null, role: null, email: null, consulteeId: null };
+    return { token: null, role: null, email: null, consulteeId: null, consultantId: null, passwordChangeRequired: false };
   }
 }
 
@@ -40,16 +52,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       role: auth.role,
       email,
       consulteeId: auth.consulteeId,
+      consultantId: auth.consultantId,
+      passwordChangeRequired: auth.passwordChangeRequired,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
     localStorage.setItem("token", auth.token);
     setState(next);
   }, []);
 
+  const updateEmail = useCallback((email: string) => {
+    setState((prev) => {
+      const next = { ...prev, email };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      return next;
+    });
+  }, []);
+
+  const clearPasswordChangeRequired = useCallback(() => {
+    setState((prev) => {
+      if (!prev.passwordChangeRequired) return prev;
+      const next = { ...prev, passwordChangeRequired: false };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      return next;
+    });
+  }, []);
+
   const logout = useCallback(() => {
     localStorage.removeItem(STORAGE_KEY);
     localStorage.removeItem("token");
-    setState({ token: null, role: null, email: null, consulteeId: null });
+    setState({ token: null, role: null, email: null, consulteeId: null, consultantId: null, passwordChangeRequired: false });
   }, []);
 
   useEffect(() => {
@@ -57,7 +88,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [logout]);
 
   return (
-    <AuthContext.Provider value={{ ...state, isAuthenticated: !!state.token, login, logout }}>
+    <AuthContext.Provider
+      value={{ ...state, isAuthenticated: !!state.token, login, updateEmail, clearPasswordChangeRequired, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );

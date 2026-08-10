@@ -27,6 +27,8 @@ const qualificationOptions = [
 
 const fields: FieldConfig[] = [
   { name: "name", label: "Name", type: "text", required: true },
+  { name: "email", label: "Email", type: "text", required: true },
+  { name: "mobile", label: "Mobile", type: "text" },
   {
     name: "speciality",
     label: "Speciality",
@@ -52,12 +54,16 @@ export function ConsultantsPage() {
       fields={fields}
       columns={[
         { key: "name", label: "Name" },
+        { key: "email", label: "Email" },
+        { key: "mobile", label: "Mobile", render: (item) => item.mobile || "-" },
         { key: "speciality", label: "Speciality" },
         { key: "experienceYears", label: "Experience" },
         { key: "fee", label: "Fee" },
       ]}
       toFormValues={(item) => ({
         name: item?.name ?? "",
+        email: item?.email ?? "",
+        mobile: item?.mobile ?? "",
         speciality: item?.speciality ?? specialityOptions[0].value,
         qualification: item?.qualification ?? "",
         experienceYears: item ? String(item.experienceYears) : "0",
@@ -65,6 +71,8 @@ export function ConsultantsPage() {
       })}
       fromFormValues={(values): ConsultantInput => ({
         name: values.name,
+        email: values.email,
+        mobile: values.mobile || null,
         speciality: values.speciality as ConsultantSpeciality,
         qualification: values.qualification,
         experienceYears: Number(values.experienceYears),

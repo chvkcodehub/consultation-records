@@ -17,6 +17,8 @@ public class ConsultationMapper {
         domain.setDiagnosis(doc.getDiagnosis());
         domain.setPrescription(doc.getPrescription());
         domain.setComments(doc.getComments());
+        domain.setRating(doc.getRating());
+        domain.setFeedback(doc.getFeedback());
         domain.setConsultationDate(doc.getConsultationDate());
         domain.setFollowUpDate(doc.getFollowUpDate());
         domain.setUpdatedDate(doc.getUpdatedDate());
@@ -35,6 +37,8 @@ public class ConsultationMapper {
         doc.setDiagnosis(domain.getDiagnosis());
         doc.setPrescription(domain.getPrescription());
         doc.setComments(domain.getComments());
+        doc.setRating(domain.getRating());
+        doc.setFeedback(domain.getFeedback());
         doc.setConsultationDate(domain.getConsultationDate());
         doc.setFollowUpDate(domain.getFollowUpDate());
         doc.setUpdatedDate(domain.getUpdatedDate());
